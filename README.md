@@ -58,6 +58,7 @@ SQLite-артефактах.
   ориентируясь на Qwen-compatible конфигурацию.
 - `docs/cli-user-guide.md`: как разработчику пользоваться CLI и просить агента
   работать через MCP.
+- `docs/phase1-phase2-deployment.md`: как поднять инструменты и MCP для фаз 1+2.
 - `docs/model-agnostic-agent-test.md`: как проверять workflow независимо от
   конкретной модели.
 - `docs/no-docker-architecture.md`: как запускать пилот без Docker и Neo4j.

@@ -1,0 +1,56 @@
+{
+  "mcpServers": {
+    "codebase-memory": {
+      "command": "codebase-memory-mcp",
+      "args": []
+    },
+    "lsp-java": {
+      "command": "mcp-language-server",
+      "args": ["--workspace", ".", "--lsp", "jdtls"],
+      "cwd": ".",
+      "timeout": 60000,
+      "trust": false
+    },
+    "lsp-typescript": {
+      "command": "mcp-language-server",
+      "args": [
+        "--workspace",
+        ".",
+        "--lsp",
+        "typescript-language-server",
+        "--",
+        "--stdio"
+      ],
+      "cwd": ".",
+      "timeout": 60000,
+      "trust": false
+    },
+    "summaries": {
+      "command": "python3",
+      "args": ["mcp/summary-mcp/src/summary_mcp/server.py"],
+      "cwd": ".",
+      "includeTools": [
+        "get_summary",
+        "get_architecture_overview",
+        "find_module",
+        "list_packages"
+      ],
+      "timeout": 30000,
+      "trust": false
+    },
+    "gigacode-context": {
+      "command": "python3",
+      "args": ["mcp/gigacode-context/src/gigacode_context/server.py"],
+      "cwd": ".",
+      "includeTools": [
+        "repo_overview",
+        "lookup_domain",
+        "get_module_summary",
+        "find_change_points"
+      ],
+      "timeout": 30000,
+      "trust": false
+    }
+  }
+}
+

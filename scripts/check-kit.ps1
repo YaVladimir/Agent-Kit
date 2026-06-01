@@ -12,12 +12,18 @@ $required = @(
     "docs\cli-integration-notes.md",
     "docs\gigacode-cli-integration.md",
     "docs\cli-user-guide.md",
+    "docs\phase1-phase2-deployment.md",
     "docs\model-agnostic-agent-test.md",
     "docs\no-docker-architecture.md",
     "examples\todoserver-context\index.md",
     "examples\todoserver-context\glossary.yaml",
     "examples\todoserver-context\processes\todo-crud.yaml",
     "examples\todoserver-context\rules\todo-rules.yaml",
+    "mcp\summary-mcp\src\summary_mcp\server.py",
+    "templates\qwen-settings.phase1-phase2.json",
+    "scripts\setup-phase1-phase2-macos.sh",
+    "scripts\setup-phase1-phase2-linux.sh",
+    "scripts\verify-phase1-phase2.sh",
     "scripts\copy-templates.sh",
     "mcp\gigacode-context\src\gigacode_context\server.py"
 )
