@@ -5,6 +5,42 @@ function Test-CommandExists {
     return [bool](Get-Command $Name -ErrorAction SilentlyContinue)
 }
 
+function Add-ToPathIfExists {
+    param([string]$PathToAdd)
+    if (-not (Test-Path -LiteralPath $PathToAdd)) {
+        return
+    }
+    $needle = ";" + $PathToAdd + ";"
+    $current = ";" + $env:PATH + ";"
+    if ($current -notlike "*$needle*") {
+        $env:PATH = "$PathToAdd;$env:PATH"
+    }
+}
+
+function Add-RepoToolsToPath {
+    param([string]$ToolsRoot)
+    Add-ToPathIfExists "C:\Program Files\Go\bin"
+    Add-ToPathIfExists (Join-Path $ToolsRoot "go\current\bin")
+    Add-ToPathIfExists (Join-Path $ToolsRoot "gopath\bin")
+    Add-ToPathIfExists (Join-Path $ToolsRoot "jdk\current\bin")
+    Add-ToPathIfExists (Join-Path $ToolsRoot "jdtls\current\bin")
+    Add-ToPathIfExists (Join-Path $ToolsRoot "codebase-memory\current")
+
+    $javaRoots = @(
+        "C:\Program Files\Eclipse Adoptium",
+        "C:\Program Files\Java"
+    )
+    foreach ($root in $javaRoots) {
+        if (-not (Test-Path -LiteralPath $root)) {
+            continue
+        }
+        $dirs = Get-ChildItem -LiteralPath $root -Directory -ErrorAction SilentlyContinue | Sort-Object Name -Descending
+        foreach ($dir in $dirs) {
+            Add-ToPathIfExists (Join-Path $dir.FullName "bin")
+        }
+    }
+}
+
 function Write-Result {
     param(
         [string]$Name,
@@ -19,6 +55,8 @@ function Write-Result {
 }
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
+$toolsRoot = Join-Path $repoRoot ".tools"
+Add-RepoToolsToPath -ToolsRoot $toolsRoot
 $hasErrors = $false
 
 Write-Host "== Проверка фаз 1+2 (Windows) =="
@@ -76,4 +114,3 @@ if ($hasErrors) {
 }
 
 Write-Host "Проверка фаз 1+2 прошла успешно."
-
