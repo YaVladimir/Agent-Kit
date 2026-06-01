@@ -12,6 +12,7 @@ $required = @(
     "docs\cli-integration-notes.md",
     "docs\gigacode-cli-integration.md",
     "docs\cli-user-guide.md",
+    "docs\model-agnostic-agent-test.md",
     "docs\no-docker-architecture.md",
     "examples\todoserver-context\index.md",
     "examples\todoserver-context\glossary.yaml",
