@@ -40,6 +40,11 @@ chmod +x scripts/verify-phase1-phase2.sh
 ./scripts/verify-phase1-phase2.sh
 ```
 
+Скрипты теперь пытаются установить `go` и `jdtls` автоматически:
+
+- macOS: через Homebrew.
+- Linux (Debian/Ubuntu): через `apt`.
+
 ## MCP-конфиг
 
 Шаблон для фаз 1+2:
@@ -66,6 +71,8 @@ chmod +x scripts/verify-phase1-phase2.sh
 Если `jdtls` недоступен в `PATH`, укажи абсолютный путь в `args` или добавь
 каталог с `jdtls` в `PATH`.
 
+`verify-phase1-phase2.sh` считает фазу 1 неготовой, если `jdtls` не найден.
+
 ## Проверка сценария
 
 Тестовый запрос в CLI:
@@ -89,4 +96,3 @@ chmod +x scripts/verify-phase1-phase2.sh
 
 - Neo4j/jQAssistant/Joern (это Фаза 3).
 - Автоматическая транскрибация интервью и extraction (это расширение Фазы 4).
-

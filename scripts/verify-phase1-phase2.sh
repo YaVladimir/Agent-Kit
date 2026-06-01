@@ -14,7 +14,7 @@ need() {
 fail=0
 
 echo "== Базовые команды =="
-for cmd in python3 node; do
+for cmd in python3 node java; do
   if ! need "$cmd"; then
     fail=1
   else
@@ -37,6 +37,12 @@ fi
 
 if need typescript-language-server; then
   typescript-language-server --version || true
+else
+  fail=1
+fi
+
+if need jdtls; then
+  jdtls --version || true
 else
   fail=1
 fi
@@ -68,4 +74,3 @@ if [[ "$fail" -ne 0 ]]; then
 fi
 
 echo "Проверка фаз 1+2 прошла успешно."
-
