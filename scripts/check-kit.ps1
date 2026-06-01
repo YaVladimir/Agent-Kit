@@ -24,6 +24,8 @@ $required = @(
     "scripts\setup-phase1-phase2-macos.sh",
     "scripts\setup-phase1-phase2-linux.sh",
     "scripts\verify-phase1-phase2.sh",
+    "scripts\setup-phase1-phase2-windows.ps1",
+    "scripts\verify-phase1-phase2-windows.ps1",
     "scripts\copy-templates.sh",
     "mcp\gigacode-context\src\gigacode_context\server.py"
 )

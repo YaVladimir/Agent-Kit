@@ -96,3 +96,21 @@ chmod +x scripts/verify-phase1-phase2.sh
 
 - Neo4j/jQAssistant/Joern (это Фаза 3).
 - Автоматическая транскрибация интервью и extraction (это расширение Фазы 4).
+
+## Windows
+
+Для Windows есть отдельные скрипты:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\setup-phase1-phase2-windows.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\verify-phase1-phase2-windows.ps1
+```
+
+Если хочешь сначала только проверить окружение без попыток установки:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\setup-phase1-phase2-windows.ps1 -NoInstall
+```
+
+Важно: для `jdtls` и `codebase-memory-mcp` на Windows часто проще использовать
+ручную установку бинарников и добавление их в `PATH`.

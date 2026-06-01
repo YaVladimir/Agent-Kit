@@ -64,6 +64,8 @@ SQLite-артефактах.
 - `docs/no-docker-architecture.md`: как запускать пилот без Docker и Neo4j.
 - `docs/pilot-playbook.md`: как провести первый пилот на одном репозитории.
 
+Для Windows добавлены отдельные скрипты setup/verify фаз 1+2.
+
 ## Лицензия
 
 Проект распространяется под лицензией Apache License 2.0. См. файл `LICENSE`.
