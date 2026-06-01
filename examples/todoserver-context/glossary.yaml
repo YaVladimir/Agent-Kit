@@ -1,0 +1,43 @@
+terms:
+  todo:
+    title: Задача Todo
+    aliases:
+      - todo item
+      - task
+      - задача
+    description: Единица работы пользователя с текстом, статусом выполнения и цветом.
+    code:
+      modules:
+        - TodoServer
+      classes:
+        - com.example.todo.model.Todo
+        - com.example.todo.dto.TodoDto
+        - com.example.todo.services.TodoService
+        - com.example.todo.controllers.TodoController
+      methods:
+        - TodoService.getAllTodo
+        - TodoService.getTodo
+        - TodoService.add
+        - TodoService.change
+        - TodoService.delete
+        - TodoService.findAll
+    rules:
+      - TODO-CRUD-001
+      - TODO-FIND-001
+
+  completed:
+    title: Статус выполнения
+    aliases:
+      - done
+      - completed
+      - выполнено
+    description: Булев признак, показывающий, завершена ли задача.
+    code:
+      classes:
+        - com.example.todo.model.Todo
+        - com.example.todo.dto.TodoDto
+        - com.example.todo.filters.TodoFilter
+      methods:
+        - TodoService.findAll
+    rules:
+      - TODO-FIND-001

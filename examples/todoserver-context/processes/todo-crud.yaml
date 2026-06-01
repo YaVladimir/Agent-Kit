@@ -1,0 +1,39 @@
+id: todo_crud
+title: Управление Todo-задачами
+description: Создание, чтение, изменение и удаление todo-задач через REST API.
+entrypoints:
+  - TodoController.getTodo
+  - TodoController.getTodos
+  - TodoController.addNewTodo
+  - TodoController.changeTodo
+  - TodoController.deleteTodo
+services:
+  - TodoService.getTodo
+  - TodoService.getAllTodo
+  - TodoService.add
+  - TodoService.change
+  - TodoService.delete
+rules:
+  - TODO-CRUD-001
+tests: []
+steps:
+  - id: create
+    title: Создание задачи
+    code:
+      classes:
+        - TodoController
+        - TodoService
+        - TodoRepository
+      methods:
+        - TodoController.addNewTodo
+        - TodoService.add
+  - id: update
+    title: Частичное изменение задачи
+    code:
+      classes:
+        - TodoService
+        - TodoMapper
+      methods:
+        - TodoService.change
+        - TodoMapper.updateTodoFromDto
+

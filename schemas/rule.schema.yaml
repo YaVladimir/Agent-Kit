@@ -1,0 +1,28 @@
+type: object
+required:
+  - rules
+properties:
+  rules:
+    type: array
+    items:
+      type: object
+      required:
+        - id
+        - title
+        - description
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        applies_to:
+          type: object
+        code:
+          type: object
+        tests:
+          type: array
+          items:
+            type: string
+

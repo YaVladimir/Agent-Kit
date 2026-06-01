@@ -1,0 +1,12 @@
+terms:
+  example_term:
+    title: Пример бизнес-термина
+    aliases:
+      - пример синонима
+    description: Краткое бизнес-значение термина.
+    code:
+      modules: []
+      classes: []
+      methods: []
+    rules: []
+

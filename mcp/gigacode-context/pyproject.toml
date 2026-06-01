@@ -1,0 +1,12 @@
+[project]
+name = "gigacode-context"
+version = "0.1.0"
+description = "Локальный stdio MCP-сервер для контекста репозитория GigaCode"
+requires-python = ">=3.10"
+dependencies = [
+  "fastmcp>=2.0.0",
+  "pyyaml>=6.0.0"
+]
+
+[project.scripts]
+gigacode-context = "gigacode_context.server:main"

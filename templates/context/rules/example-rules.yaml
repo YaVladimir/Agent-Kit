@@ -1,0 +1,12 @@
+rules:
+  - id: RULE-001
+    title: Пример правила
+    description: Поведение правила на языке продукта.
+    applies_to:
+      processes: []
+      terms: []
+    code:
+      classes: []
+      methods: []
+    tests: []
+

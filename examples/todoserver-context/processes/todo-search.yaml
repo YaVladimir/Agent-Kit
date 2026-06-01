@@ -1,0 +1,27 @@
+id: todo_search
+title: Поиск Todo-задач
+description: Поиск задач по тексту, статусу выполнения и цвету.
+entrypoints:
+  - TodoController.findTodos
+services:
+  - TodoService.findAll
+rules:
+  - TODO-FIND-001
+tests: []
+steps:
+  - id: receive_filter
+    title: Получить фильтр из запроса
+    code:
+      classes:
+        - TodoController
+        - TodoFilter
+      methods:
+        - TodoController.findTodos
+  - id: query_by_example
+    title: Найти задачи через Spring Data Example
+    code:
+      classes:
+        - TodoService
+        - TodoRepository
+      methods:
+        - TodoService.findAll

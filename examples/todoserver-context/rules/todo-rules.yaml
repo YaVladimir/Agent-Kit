@@ -1,0 +1,40 @@
+rules:
+  - id: TODO-CRUD-001
+    title: CRUD операции Todo
+    description: Todo-задачи создаются из TodoDto, читаются по id или списком, изменяются частично через MapStruct и удаляются по id.
+    applies_to:
+      processes:
+        - todo_crud
+      terms:
+        - todo
+    code:
+      classes:
+        - TodoController
+        - TodoService
+        - TodoRepository
+        - TodoMapper
+      methods:
+        - TodoService.add
+        - TodoService.change
+        - TodoService.delete
+    tests: []
+
+  - id: TODO-FIND-001
+    title: Поиск по полям Todo
+    description: Поиск использует text, completed и color из TodoFilter и выполняется через Spring Data ExampleMatcher.
+    applies_to:
+      processes:
+        - todo_search
+      terms:
+        - todo
+        - completed
+    code:
+      classes:
+        - TodoController
+        - TodoService
+        - TodoFilter
+      methods:
+        - TodoController.findTodos
+        - TodoService.findAll
+    tests: []
+

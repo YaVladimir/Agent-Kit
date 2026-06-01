@@ -1,0 +1,14 @@
+id: example_process
+title: Пример бизнес-процесса
+description: Краткое описание процесса.
+entrypoints: []
+services: []
+rules: []
+tests: []
+steps:
+  - id: step_1
+    title: Первый шаг
+    code:
+      classes: []
+      methods: []
+

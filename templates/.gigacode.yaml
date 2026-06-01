@@ -1,0 +1,16 @@
+version: 1
+repository:
+  name: example-product
+  primary_language: java
+  build_tool: maven
+context:
+  root: .context
+  cache: .gigacode
+policy:
+  allow_network_tools: false
+  prefer_stdio_mcp: true
+  require_plan_before_edit: true
+checks:
+  compile: mvn -q -DskipTests compile
+  unit_tests: mvn -q test
+

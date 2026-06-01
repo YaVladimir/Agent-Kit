@@ -1,0 +1,27 @@
+type: object
+required:
+  - terms
+properties:
+  terms:
+    type: object
+    additionalProperties:
+      type: object
+      required:
+        - title
+        - description
+      properties:
+        title:
+          type: string
+        aliases:
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+        code:
+          type: object
+        rules:
+          type: array
+          items:
+            type: string
+

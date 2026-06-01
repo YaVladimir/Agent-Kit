@@ -1,0 +1,9 @@
+{
+  "servers": {
+    "java": {
+      "command": "jdtls",
+      "args": []
+    }
+  }
+}
+

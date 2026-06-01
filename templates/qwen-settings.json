@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "gigacode-context": {
+      "command": "python3",
+      "args": ["tools/gigacode-context/server.py"],
+      "cwd": ".",
+      "includeTools": [
+        "repo_overview",
+        "lookup_domain",
+        "get_module_summary",
+        "find_change_points"
+      ],
+      "timeout": 30000,
+      "trust": false
+    }
+  }
+}
