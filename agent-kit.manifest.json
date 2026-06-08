@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "name": "gigacode-agent-kit",
+  "description": "Шаблонный проект для корпоративного AI-кодингового агента с Qwen Coder, DeepSeek v4 Flash или совместимой LLM.",
+  "language": "ru",
+  "license": "Apache-2.0",
+  "deployment": {
+    "mode": "manual-approved-artifacts",
+    "supportsMacos": true,
+    "supportsLinux": true,
+    "supportsWindows": true,
+    "requiresDocker": false,
+    "allowsExternalDownloads": false
+  },
+  "modelAdapters": [
+    {
+      "modelFamily": "qwen-coder",
+      "profile": "templates/adapters/qwen-coder.yaml",
+      "cliMode": "mcp-stdio"
+    },
+    {
+      "modelFamily": "deepseek-v4-flash",
+      "profile": "templates/adapters/deepseek-v4-flash.yaml",
+      "cliMode": "wrapper-loop"
+    },
+    {
+      "modelFamily": "custom",
+      "profile": "templates/adapter-compatibility.yaml",
+      "cliMode": "mcp-stdio|function-calling|wrapper-loop"
+    }
+  ],
+  "templateOutputs": [
+    "AGENTS.md",
+    "QWEN.md",
+    ".lsp.json",
+    ".gigacode.yaml",
+    ".gigacode-adapter.yaml",
+    ".gigacode-tools.json",
+    ".gigacode-kit.json",
+    ".gigacode-adapters/qwen-coder.yaml",
+    ".gigacode-adapters/deepseek-v4-flash.yaml",
+    ".context/index.md",
+    ".context/architecture.md",
+    ".context/architecture-graph.yaml",
+    ".context/domain-intake.md",
+    ".context/glossary.yaml",
+    ".context/processes/example-process.yaml",
+    ".context/rules/example-rules.yaml"
+  ],
+  "toolContracts": {
+    "humanReadable": "skills/gigacode-java-enterprise/references/tool-contracts.md",
+    "machineReadable": "templates/tool-manifest.json",
+    "deployedPath": ".gigacode-tools.json"
+  },
+  "phases": [
+    {
+      "id": "phase-1",
+      "name": "code-navigation",
+      "status": "template-ready",
+      "evidence": [
+        "templates/qwen-settings.phase1-phase2.json",
+        "templates/.lsp.json",
+        "docs/phase1-phase2-deployment.md"
+      ]
+    },
+    {
+      "id": "phase-2",
+      "name": "hierarchical-summaries",
+      "status": "minimal-mcp-ready",
+      "evidence": [
+        "mcp/summary-mcp/src/summary_mcp/server.py",
+        "templates/qwen-settings.phase1-phase2.json"
+      ]
+    },
+    {
+      "id": "phase-3",
+      "name": "architecture-graph",
+      "status": "minimal-no-docker-mcp-ready",
+      "evidence": [
+        "mcp/architecture-mcp/src/architecture_mcp/server.py",
+        "templates/context/architecture-graph.yaml",
+        "docs/no-docker-architecture.md",
+        "docs/manifest-alignment.md"
+      ]
+    },
+    {
+      "id": "phase-4",
+      "name": "domain-context",
+      "status": "base-layer-and-intake-workflow-ready",
+      "evidence": [
+        "docs/domain-knowledge-workflow.md",
+        "templates/domain-interview.md",
+        "prompts/domain-extraction.md",
+        "templates/context",
+        "schemas",
+        "mcp/gigacode-context/src/gigacode_context/server.py"
+      ]
+    }
+  ],
+  "checks": {
+    "macosLinux": "scripts/check-kit.sh",
+    "windows": "scripts/check-kit.ps1",
+    "crossPlatformCi": ".github/workflows/check-kit.yml",
+    "phase1Phase2Macos": "scripts/setup-phase1-phase2-macos.sh && scripts/verify-phase1-phase2.sh",
+    "phase1Phase2Linux": "scripts/setup-phase1-phase2-linux.sh && scripts/verify-phase1-phase2.sh",
+    "phase1Phase2Windows": "scripts/setup-phase1-phase2-windows.ps1; scripts/verify-phase1-phase2-windows.ps1"
+  },
+  "securityInvariants": [
+    "setup scripts do not download or install third-party software",
+    "runtime tools are installed from approved internal artifact sources",
+    "secrets are not stored in AGENTS.md, QWEN.md, .context, .gigacode.yaml, .gigacode-adapter.yaml or .gigacode-tools.json",
+    "agent must provide a plan before non-trivial edits",
+    "tool manifest is read-only by default"
+  ]
+}

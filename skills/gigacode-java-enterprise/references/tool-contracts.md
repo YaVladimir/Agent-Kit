@@ -3,17 +3,29 @@
 Инструменты должны быть узкими и названы по смыслу. Агент не должен каждый раз
 собирать большие ad hoc поиски для типовых корпоративных задач.
 
+Машиночитаемая версия базового контракта лежит в
+`templates/tool-manifest.json`. При развёртывании в продуктовый репозиторий она
+копируется как `.gigacode-tools.json`; CLI/wrapper может использовать её для
+MCP mapping, function calling или ручного wrapper-loop.
+
 ## Доменные инструменты
 
-`domain.lookup_task(query)`
-: Вернуть бизнес-термины, процессы, правила, маппинг на код и тесты для задачи,
-сформулированной на языке продукта.
+`context.lookup_domain(query)`
+: Вернуть бизнес-термины, процессы, правила, маппинг на код и тесты для
+задачи, сформулированной на языке продукта.
 
-`domain.find_terms(query)`
-: Вернуть записи глоссария и синонимы.
+`domain.translate_task(task)`
+: Перевести бизнес-задачу в найденные термины, процессы, правила, точки
+изменения и первичный план. Результат нужно подтверждать через code/LSP tools.
 
-`domain.find_rules(query)`
+`domain.find_rule(query)`
 : Вернуть бизнес-правила и комплаенс-правила с маппингом на код.
+
+`domain.list_processes()`
+: Перечислить процессы из `.context/processes`.
+
+`domain.list_rules()`
+: Перечислить правила из `.context/rules`.
 
 ## Инструменты контекста
 
@@ -42,6 +54,16 @@
 
 ## Архитектурные инструменты
 
-`architecture.check(files)`
+`architecture.trace_endpoint_to_db(endpoint)`
+: Построить цепочку endpoint → controller → service → repository → DB.
+
+`architecture.find_blast_radius(symbol)`
+: Найти известные зависимости, endpoint'ы, Spring wiring и тесты вокруг класса,
+bean, endpoint или модуля.
+
+`architecture.check_layer_violations(files)`
 : Проверить правила слоёв, запрещённые зависимости, изменения публичных API и
 границы владения модулей.
+
+`architecture.find_spring_wiring(component)`
+: Найти Spring bean wiring, зависимости и тесты для компонента.

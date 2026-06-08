@@ -20,9 +20,30 @@ GigaCode CLI
 Для пилота используй один из вариантов вместо Neo4j:
 
 - SQLite-таблицы: `nodes(id, type, name, path)` и `edges(src, dst, type)`.
-- CI-артефакт: `context.sqlite`, который скачивают разработчики.
+- Файловый граф `.context/architecture-graph.yaml`, который читает локальный
+  `architecture-mcp`.
+- CI-артефакт: `context.sqlite`, который разработчики получают из внутреннего
+  артефактного хранилища.
 - Существующий корпоративный PostgreSQL, если нужно центральное хранилище.
 - ArchUnit, jdeps, отчёты зависимостей Maven/Gradle для проверки слоёв.
+
+## Минимальный phase 3 без Docker
+
+Для первого запуска не поднимай Neo4j. Заполни
+`.context/architecture-graph.yaml` вручную или из approved CI-отчёта и подключи
+`mcp/architecture-mcp` как stdio MCP-сервер.
+
+Минимальный набор tools:
+
+- `trace_endpoint_to_db(endpoint)` — цепочка endpoint → controller → service →
+  repository → таблицы.
+- `find_blast_radius(symbol)` — известные зависимости, endpoint'ы, Spring beans
+  и тесты вокруг класса или модуля.
+- `check_layer_violations(files)` — известные нарушения слоёв из графа.
+- `find_spring_wiring(component)` — Spring bean wiring и связанные тесты.
+
+Позже backend можно заменить на Neo4j/jQAssistant, сохранив те же имена tools и
+схемы входа/выхода.
 
 ## Когда добавлять настоящий сервер
 

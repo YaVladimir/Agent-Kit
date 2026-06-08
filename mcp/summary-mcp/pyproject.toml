@@ -1,0 +1,12 @@
+[project]
+name = "summary-mcp"
+version = "0.1.0"
+description = "Локальный MCP-сервер для иерархических summary репозитория"
+requires-python = ">=3.10"
+dependencies = [
+  "fastmcp>=2.0.0"
+]
+
+[project.scripts]
+summary-mcp = "summary_mcp.server:main"
+

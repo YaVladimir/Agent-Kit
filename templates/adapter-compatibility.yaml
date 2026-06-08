@@ -1,0 +1,45 @@
+version: 1
+adapter:
+  name: example-corporate-cli
+  model_family: qwen-coder # qwen-coder | deepseek-v4-flash | deepseek-like | custom
+  cli_mode: mcp-stdio # mcp-stdio | function-calling | wrapper-loop
+
+instructions:
+  system_prompt: prompts/system.md
+  corporate_prompt: prompts/corporate.md
+  repository_instructions:
+    - AGENTS.md
+    - QWEN.md
+  language: ru
+
+tooling:
+  mcp_config_format: qwen-compatible
+  mcp_config_path: .qwen/settings.json
+  tool_manifest_path: .gigacode-tools.json
+  supports_stdio_mcp: true
+  supports_function_calling: false
+  supports_native_lsp: false
+  fallback_search: rg
+
+required_tools:
+  code_navigation:
+    - codebase-memory-mcp
+    - mcp-language-server
+  language_servers:
+    java: jdtls
+    typescript: typescript-language-server
+  context:
+    - gigacode-context
+    - summary-mcp
+
+security:
+  allow_external_downloads: false
+  approved_artifact_source: internal-registry
+  allow_secrets_in_context: false
+  require_plan_before_edit: true
+
+acceptance:
+  dry_run_task: docs/model-agnostic-agent-test.md
+  required_checks:
+    - scripts/check-kit.ps1
+    - scripts/verify-phase1-phase2-windows.ps1

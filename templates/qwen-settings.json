@@ -7,8 +7,25 @@
       "includeTools": [
         "repo_overview",
         "lookup_domain",
+        "translate_task",
+        "find_rule",
+        "list_processes",
+        "list_rules",
         "get_module_summary",
         "find_change_points"
+      ],
+      "timeout": 30000,
+      "trust": false
+    },
+    "architecture": {
+      "command": "python3",
+      "args": ["mcp/architecture-mcp/src/architecture_mcp/server.py"],
+      "cwd": ".",
+      "includeTools": [
+        "trace_endpoint_to_db",
+        "find_blast_radius",
+        "check_layer_violations",
+        "find_spring_wiring"
       ],
       "timeout": 30000,
       "trust": false

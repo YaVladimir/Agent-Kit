@@ -8,6 +8,8 @@
 - `skills/gigacode-java-enterprise`: общий сценарий работы агента.
 - `templates`: файлы, которые копируются в продуктовый репозиторий.
 - `mcp/gigacode-context`: локальный stdio MCP-сервер для `.context`.
+- `mcp/architecture-mcp`: локальный no-Docker MCP-сервер для архитектурного
+  графа из `.context/architecture-graph.yaml`.
 - `schemas`: схемы YAML-файлов доменного контекста.
 - `prompts`: базовые промпты для корпоративной обёртки GigaCode.
 - `examples`: готовые примеры контекста для пилотных репозиториев.
@@ -49,6 +51,16 @@ SQLite-артефактах.
 - MCP реализован как локальный stdio-процесс;
 - `templates/qwen-settings.json` является совместимым шаблоном, а не финальным
   контрактом корпоративного CLI;
+- `docs/model-adapter-contract.md` описывает слой адаптера для Qwen Coder,
+  DeepSeek-like и других корпоративных моделей;
+- `templates/adapter-compatibility.yaml` фиксирует, какие возможности должен
+  предоставить конкретный CLI/wrapper;
+- `templates/adapters/` содержит готовые стартовые профили для Qwen Coder и
+  DeepSeek v4 Flash;
+- `templates/tool-manifest.json` задаёт машиночитаемый контракт tools для
+  MCP, function calling или wrapper-loop;
+- `agent-kit.manifest.json` описывает kit как переносимый пакет: поддерживаемые
+  ОС, модели, output-файлы, проверки и security invariants;
 - имена команд, пути конфигов и способ регистрации MCP нужно уточнить после
   доступа к внутреннему CLI.
 
@@ -58,10 +70,40 @@ SQLite-артефактах.
   ориентируясь на Qwen-compatible конфигурацию.
 - `docs/cli-user-guide.md`: как разработчику пользоваться CLI и просить агента
   работать через MCP.
+- `docs/phase1-phase2-deployment.md`: как поднять инструменты и MCP для фаз 1+2.
+- `docs/domain-knowledge-workflow.md`: как собирать доменный контекст через
+  интервью, extraction prompt, ревью и DoD.
 - `docs/model-agnostic-agent-test.md`: как проверять workflow независимо от
   конкретной модели.
+- `docs/model-adapter-contract.md`: какой контракт должен выполнить CLI/wrapper,
+  чтобы kit работал с Qwen Coder, DeepSeek-like или другой LLM.
+- `docs/manifest-alignment.md`: матрица соответствия kit исходному манифесту
+  внедрения.
 - `docs/no-docker-architecture.md`: как запускать пилот без Docker и Neo4j.
 - `docs/pilot-playbook.md`: как провести первый пилот на одном репозитории.
+
+Для Windows добавлены отдельные скрипты setup/verify фаз 1+2.
+
+## Проверка kit
+
+На macOS/Linux:
+
+```bash
+chmod +x scripts/check-kit.sh
+./scripts/check-kit.sh
+```
+
+На Windows:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\check-kit.ps1
+```
+
+Обе проверки не скачивают зависимости. Они проверяют структуру проекта,
+политики безопасности и smoke-развёртывание шаблонов во временный каталог.
+Для публичного репозитория добавлен GitHub Actions gate
+`.github/workflows/check-kit.yml`, который запускает эти проверки на Windows,
+Linux и macOS.
 
 ## Лицензия
 
