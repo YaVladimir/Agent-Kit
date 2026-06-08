@@ -32,6 +32,7 @@ $required = @(
     "scripts\setup-phase1-phase2-windows.ps1",
     "scripts\verify-phase1-phase2-windows.ps1",
     "scripts\copy-templates.sh",
+    "scripts\copy-templates.ps1",
     "mcp\gigacode-context\src\gigacode_context\server.py"
 )
 
@@ -100,6 +101,47 @@ foreach ($relative in $setupScripts) {
         if ($content -match [regex]::Escape($pattern)) {
             throw "Setup-скрипт содержит запрещённую автоустановку '$pattern': $relative"
         }
+    }
+}
+
+$smokeRoot = Join-Path ([System.IO.Path]::GetTempPath()) ("gigacode-agent-kit-smoke-" + [System.Guid]::NewGuid().ToString("N"))
+New-Item -ItemType Directory -Path $smokeRoot | Out-Null
+try {
+    & (Join-Path $root "scripts\copy-templates.ps1") -RepositoryPath $smokeRoot | Out-Null
+
+    $deployedRequired = @(
+        "AGENTS.md",
+        "QWEN.md",
+        ".lsp.json",
+        ".gigacode.yaml",
+        ".gigacode-adapter.yaml",
+        ".context\index.md",
+        ".context\architecture.md",
+        ".context\glossary.yaml",
+        ".context\processes\example-process.yaml",
+        ".context\rules\example-rules.yaml"
+    )
+    foreach ($relative in $deployedRequired) {
+        $path = Join-Path $smokeRoot $relative
+        if (-not (Test-Path -LiteralPath $path)) {
+            throw "Smoke-test развёртывания не нашёл файл: $relative"
+        }
+    }
+
+    Get-Content -Raw -LiteralPath (Join-Path $smokeRoot ".lsp.json") | ConvertFrom-Json | Out-Null
+
+    $deployedProjectConfig = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $smokeRoot ".gigacode.yaml")
+    if ($deployedProjectConfig -notmatch "allow_network_tools:\s*false" -or $deployedProjectConfig -notmatch "require_plan_before_edit:\s*true") {
+        throw "Smoke-test развёртывания нашёл некорректную .gigacode.yaml"
+    }
+
+    $deployedAdapterConfig = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $smokeRoot ".gigacode-adapter.yaml")
+    if ($deployedAdapterConfig -notmatch "model_family" -or $deployedAdapterConfig -notmatch "allow_external_downloads:\s*false") {
+        throw "Smoke-test развёртывания нашёл некорректную .gigacode-adapter.yaml"
+    }
+} finally {
+    if (Test-Path -LiteralPath $smokeRoot) {
+        Remove-Item -LiteralPath $smokeRoot -Recurse -Force
     }
 }
 
