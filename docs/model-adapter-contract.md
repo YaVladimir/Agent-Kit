@@ -1,8 +1,8 @@
 # Контракт адаптера модели и CLI
 
 Этот документ фиксирует границу между Agent Kit и конкретной LLM/CLI.
-Kit должен оставаться переносимым: Qwen Coder, DeepSeek-like модель,
-GigaCode или другая корпоративная LLM подключаются через адаптер, а не через
+Kit должен оставаться переносимым: Qwen Coder, DeepSeek v4 Flash,
+DeepSeek-like модель, GigaCode или другая корпоративная LLM подключаются через адаптер, а не через
 переписывание промптов, `.context` и MCP-контрактов.
 
 ## Что остается стабильным
@@ -69,9 +69,14 @@ GigaCode или другая корпоративная LLM подключают
 Для Qwen-compatible CLI достаточно адаптировать путь к `settings.json` и способ
 подачи системного промпта.
 
-## Совместимость DeepSeek-like модели
+Starter profile лежит в `templates/adapters/qwen-coder.yaml`. При копировании
+шаблонов он попадает в продуктовый репозиторий как
+`.gigacode-adapters/qwen-coder.yaml`.
 
-Для DeepSeek-like модели контракт тот же, но адаптер может отличаться:
+## Совместимость DeepSeek v4 Flash и DeepSeek-like моделей
+
+Для DeepSeek v4 Flash / DeepSeek-like модели контракт тот же, но адаптер может
+отличаться:
 
 - если CLI не поддерживает MCP напрямую, wrapper вызывает MCP-серверы сам и
   передает результаты модели как tool results;
@@ -83,6 +88,11 @@ GigaCode или другая корпоративная LLM подключают
   `.context` и результаты поиска.
 
 Важно: бизнес workflow и `.context` при этом не меняются.
+
+Starter profile для wrapper-loop лежит в
+`templates/adapters/deepseek-v4-flash.yaml`. При копировании шаблонов он
+попадает в продуктовый репозиторий как
+`.gigacode-adapters/deepseek-v4-flash.yaml`.
 
 ## Минимальный цикл агента
 

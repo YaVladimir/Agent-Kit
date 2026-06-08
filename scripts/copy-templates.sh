@@ -21,6 +21,9 @@ cp "$kit_root/templates/.gigacode.yaml" "$repo_path/.gigacode.yaml"
 cp "$kit_root/templates/adapter-compatibility.yaml" "$repo_path/.gigacode-adapter.yaml"
 cp "$kit_root/templates/tool-manifest.json" "$repo_path/.gigacode-tools.json"
 
+mkdir -p "$repo_path/.gigacode-adapters"
+cp -R "$kit_root/templates/adapters/." "$repo_path/.gigacode-adapters/"
+
 mkdir -p "$repo_path/.context"
 cp -R "$kit_root/templates/context/." "$repo_path/.context/"
 

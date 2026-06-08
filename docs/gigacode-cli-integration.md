@@ -29,6 +29,9 @@ repo-root/
   .gigacode.yaml
   .gigacode-adapter.yaml
   .gigacode-tools.json
+  .gigacode-adapters/
+    qwen-coder.yaml
+    deepseek-v4-flash.yaml
   .context/
     index.md
     architecture.md
@@ -46,6 +49,8 @@ repo-root/
 контрактом kit.
 `.gigacode-tools.json` содержит машиночитаемый список logical tools, input
 schemas и backend mapping для MCP/function-calling/wrapper-loop.
+`.gigacode-adapters/` содержит starter profiles для Qwen Coder и
+DeepSeek v4 Flash wrapper'ов.
 
 ## Слои промптов
 

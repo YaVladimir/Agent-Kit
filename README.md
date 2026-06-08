@@ -53,6 +53,8 @@ SQLite-артефактах.
   DeepSeek-like и других корпоративных моделей;
 - `templates/adapter-compatibility.yaml` фиксирует, какие возможности должен
   предоставить конкретный CLI/wrapper;
+- `templates/adapters/` содержит готовые стартовые профили для Qwen Coder и
+  DeepSeek v4 Flash;
 - `templates/tool-manifest.json` задаёт машиночитаемый контракт tools для
   MCP, function calling или wrapper-loop;
 - имена команд, пути конфигов и способ регистрации MCP нужно уточнить после

@@ -13,6 +13,8 @@ required=(
   "templates/.gigacode.yaml"
   "templates/.gitignore.additions"
   "templates/adapter-compatibility.yaml"
+  "templates/adapters/qwen-coder.yaml"
+  "templates/adapters/deepseek-v4-flash.yaml"
   "templates/tool-manifest.json"
   "templates/qwen-settings.json"
   "templates/qwen-settings.phase1-phase2.json"
@@ -82,6 +84,26 @@ if ! grep -Eq 'tool_manifest_path:[[:space:]]*.gigacode-tools.json' "$root/templ
   exit 1
 fi
 
+if ! grep -Eq 'model_family:[[:space:]]*qwen-coder' "$root/templates/adapters/qwen-coder.yaml"; then
+  echo "qwen-coder adapter profile is invalid." >&2
+  exit 1
+fi
+
+if ! grep -Eq 'cli_mode:[[:space:]]*mcp-stdio' "$root/templates/adapters/qwen-coder.yaml"; then
+  echo "qwen-coder adapter profile must use mcp-stdio." >&2
+  exit 1
+fi
+
+if ! grep -Eq 'model_family:[[:space:]]*deepseek-v4-flash' "$root/templates/adapters/deepseek-v4-flash.yaml"; then
+  echo "deepseek-v4-flash adapter profile is invalid." >&2
+  exit 1
+fi
+
+if ! grep -Eq 'cli_mode:[[:space:]]*wrapper-loop' "$root/templates/adapters/deepseek-v4-flash.yaml"; then
+  echo "deepseek-v4-flash adapter profile must use wrapper-loop." >&2
+  exit 1
+fi
+
 required_tool_names=(
   "context.repo_overview"
   "context.lookup_domain"
@@ -121,6 +143,11 @@ fi
 
 if ! grep -q '.gigacode-tools.json' "$root/scripts/copy-templates.ps1" || ! grep -q '.gigacode-tools.json' "$root/scripts/copy-templates.sh"; then
   echo "copy-templates scripts do not copy tool manifest." >&2
+  exit 1
+fi
+
+if ! grep -q '.gigacode-adapters' "$root/scripts/copy-templates.ps1" || ! grep -q '.gigacode-adapters' "$root/scripts/copy-templates.sh"; then
+  echo "copy-templates scripts do not copy adapter profiles." >&2
   exit 1
 fi
 
@@ -166,6 +193,8 @@ deployed_required=(
   ".gigacode.yaml"
   ".gigacode-adapter.yaml"
   ".gigacode-tools.json"
+  ".gigacode-adapters/qwen-coder.yaml"
+  ".gigacode-adapters/deepseek-v4-flash.yaml"
   ".context/index.md"
   ".context/architecture.md"
   ".context/glossary.yaml"
@@ -200,6 +229,11 @@ fi
 
 if ! grep -Eq 'allow_external_downloads:[[:space:]]*false' "$smoke_root/.gigacode-adapter.yaml"; then
   echo "Deployed .gigacode-adapter.yaml must forbid external downloads." >&2
+  exit 1
+fi
+
+if ! grep -q 'deepseek-v4-flash' "$smoke_root/.gigacode-adapters/deepseek-v4-flash.yaml" || ! grep -q 'wrapper-loop' "$smoke_root/.gigacode-adapters/deepseek-v4-flash.yaml"; then
+  echo "Deployed deepseek-v4-flash adapter profile is invalid." >&2
   exit 1
 fi
 

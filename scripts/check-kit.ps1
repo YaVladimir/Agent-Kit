@@ -11,6 +11,8 @@ $required = @(
     "templates\.gigacode.yaml",
     "templates\.gitignore.additions",
     "templates\adapter-compatibility.yaml",
+    "templates\adapters\qwen-coder.yaml",
+    "templates\adapters\deepseek-v4-flash.yaml",
     "templates\tool-manifest.json",
     "templates\qwen-settings.json",
     "docs\cli-integration-notes.md",
@@ -68,6 +70,16 @@ if ($adapterProfile -notmatch "tool_manifest_path:\s*\.gigacode-tools\.json") {
     throw "adapter-compatibility.yaml не указывает tool manifest"
 }
 
+$qwenAdapterProfile = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $root "templates\adapters\qwen-coder.yaml")
+if ($qwenAdapterProfile -notmatch "model_family:\s*qwen-coder" -or $qwenAdapterProfile -notmatch "cli_mode:\s*mcp-stdio") {
+    throw "Некорректный профиль adapters/qwen-coder.yaml"
+}
+
+$deepseekAdapterProfile = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $root "templates\adapters\deepseek-v4-flash.yaml")
+if ($deepseekAdapterProfile -notmatch "model_family:\s*deepseek-v4-flash" -or $deepseekAdapterProfile -notmatch "cli_mode:\s*wrapper-loop") {
+    throw "Некорректный профиль adapters/deepseek-v4-flash.yaml"
+}
+
 $toolNames = @($toolManifestJson.tools | ForEach-Object { $_.name })
 $requiredToolNames = @(
     "context.repo_overview",
@@ -105,6 +117,9 @@ if ($copyPs1 -notmatch "\.gigacode-adapter\.yaml" -or $copySh -notmatch "\.gigac
 }
 if ($copyPs1 -notmatch "\.gigacode-tools\.json" -or $copySh -notmatch "\.gigacode-tools\.json") {
     throw "copy-templates скрипты не копируют tool manifest"
+}
+if ($copyPs1 -notmatch "\.gigacode-adapters" -or $copySh -notmatch "\.gigacode-adapters") {
+    throw "copy-templates скрипты не копируют профили адаптеров"
 }
 
 $setupScripts = @(
@@ -145,6 +160,8 @@ try {
         ".gigacode.yaml",
         ".gigacode-adapter.yaml",
         ".gigacode-tools.json",
+        ".gigacode-adapters\qwen-coder.yaml",
+        ".gigacode-adapters\deepseek-v4-flash.yaml",
         ".context\index.md",
         ".context\architecture.md",
         ".context\glossary.yaml",
@@ -169,6 +186,11 @@ try {
     $deployedAdapterConfig = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $smokeRoot ".gigacode-adapter.yaml")
     if ($deployedAdapterConfig -notmatch "model_family" -or $deployedAdapterConfig -notmatch "allow_external_downloads:\s*false") {
         throw "Smoke-test развёртывания нашёл некорректную .gigacode-adapter.yaml"
+    }
+
+    $deployedDeepseekProfile = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $smokeRoot ".gigacode-adapters\deepseek-v4-flash.yaml")
+    if ($deployedDeepseekProfile -notmatch "deepseek-v4-flash" -or $deployedDeepseekProfile -notmatch "wrapper-loop") {
+        throw "Smoke-test развёртывания нашёл некорректный deepseek-v4-flash profile"
     }
 
     $deployedToolManifest = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $smokeRoot ".gigacode-tools.json")

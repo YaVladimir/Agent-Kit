@@ -1,0 +1,40 @@
+version: 1
+adapter:
+  name: deepseek-v4-flash-wrapper
+  model_family: deepseek-v4-flash
+  cli_mode: wrapper-loop
+
+instructions:
+  system_prompt: prompts/system.md
+  corporate_prompt: prompts/corporate.md
+  repository_instructions:
+    - AGENTS.md
+    - QWEN.md
+  language: ru
+
+tooling:
+  mcp_config_format: adapter-owned
+  mcp_config_path: .qwen/settings.json
+  tool_manifest_path: .gigacode-tools.json
+  supports_stdio_mcp: false
+  supports_function_calling: adapter-provided
+  supports_native_lsp: false
+  fallback_search: rg
+
+runtime:
+  start_from_repository_root: true
+  pass_environment: true
+  tool_timeout_ms: 60000
+  context_budget_strategy: compact-first
+
+wrapper_loop:
+  step_1: model_requests_logical_tool
+  step_2: wrapper_maps_tool_manifest_to_backend
+  step_3: wrapper_executes_mcp_or_fallback
+  step_4: wrapper_returns_tool_result_to_model
+
+security:
+  allow_external_downloads: false
+  approved_artifact_source: internal-registry
+  allow_secrets_in_context: false
+  require_plan_before_edit: true
