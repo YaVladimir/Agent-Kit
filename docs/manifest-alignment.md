@@ -15,6 +15,7 @@
 - локальные stdio MCP-серверы `gigacode-context` и `summary-mcp`;
 - Qwen-compatible MCP config;
 - контракт адаптера для Qwen Coder, DeepSeek v4 Flash, DeepSeek-like и других LLM;
+- machine-readable passport kit в `agent-kit.manifest.json`;
 - no-Docker сценарий;
 - корпоративно безопасный manual setup без скрытых внешних загрузок.
 
@@ -25,12 +26,13 @@
 
 | Требование манифеста | Статус | Доказательство в репозитории | Как проверить |
 |---|---|---|---|
-| Шаблонный проект можно развернуть в продуктовом репозитории | Реализовано | `scripts/copy-templates.ps1`, `scripts/copy-templates.sh`, `templates/*`, `scripts/check-kit.ps1`, `scripts/check-kit.sh` | `check-kit.ps1` и `check-kit.sh` запускают smoke-test развёртывания во временный каталог и проверяют `AGENTS.md`, `QWEN.md`, `.context`, `.gigacode.yaml`, `.gigacode-adapter.yaml` |
+| Шаблонный проект можно развернуть в продуктовом репозитории | Реализовано | `agent-kit.manifest.json`, `scripts/copy-templates.ps1`, `scripts/copy-templates.sh`, `templates/*`, `scripts/check-kit.ps1`, `scripts/check-kit.sh` | `check-kit.ps1` и `check-kit.sh` запускают smoke-test развёртывания во временный каталог и проверяют `AGENTS.md`, `QWEN.md`, `.context`, `.gigacode.yaml`, `.gigacode-adapter.yaml`, `.gigacode-kit.json` |
 | Общение агента и текстовые инструкции на русском языке | Реализовано | `README.md`, `prompts/system.md`, `templates/AGENTS.md`, `skills/gigacode-java-enterprise/SKILL.md` | `scripts/check-kit.ps1` проверяет русскоязычное правило в системном промпте |
 | Модель-независимый workflow: задача -> контекст -> поиск -> план -> код -> проверки | Реализовано | `prompts/system.md`, `templates/AGENTS.md`, `skills/gigacode-java-enterprise/SKILL.md`, `docs/model-agnostic-agent-test.md` | Прогнать dry-run из `docs/model-agnostic-agent-test.md` |
 | Интеграция с Qwen Coder / GigaCode CLI | Реализовано как совместимый шаблон | `templates/qwen-settings.json`, `templates/qwen-settings.phase1-phase2.json`, `docs/gigacode-cli-integration.md` | Скопировать settings в `.qwen/settings.json` и запустить совместимый CLI из корня проекта |
 | Возможность встроить DeepSeek v4 Flash, DeepSeek-like или другую LLM | Реализовано как контракт адаптера | `docs/model-adapter-contract.md`, `templates/adapter-compatibility.yaml`, `templates/adapters/deepseek-v4-flash.yaml`, `templates/tool-manifest.json`, `docs/cli-integration-notes.md` | Выбрать starter profile, заполнить `.gigacode-adapter.yaml`, загрузить `.gigacode-tools.json` в wrapper и пройти acceptance checklist |
 | Машиночитаемый контракт tools для MCP/function-calling/wrapper-loop | Реализовано | `templates/tool-manifest.json`, `docs/model-adapter-contract.md`, `scripts/check-kit.*` | `check-kit.ps1`/`check-kit.sh` валидируют JSON и обязательные logical tools |
+| Машиночитаемый паспорт kit для ревью и wrapper'ов | Реализовано | `agent-kit.manifest.json`, `scripts/copy-templates.*`, `scripts/check-kit.*` | `check-kit.ps1`/`check-kit.sh` валидируют JSON, политики no-download/no-Docker и наличие Qwen/DeepSeek profiles |
 | Фаза 1: навигация по коду через codebase/LSP/MCP | Реализовано как подключаемый слой | `templates/qwen-settings.phase1-phase2.json`, `docs/phase1-phase2-deployment.md`, `scripts/verify-phase1-phase2.*` | Установить approved tools из внутренних источников и запустить verify |
 | Java LSP через Eclipse JDT LS | Реализовано как обязательная проверка окружения | `templates/.lsp.json`, `docs/phase1-phase2-deployment.md`, `scripts/verify-phase1-phase2.*` | `jdtls` должен быть в `PATH` или указан абсолютным путем в конфиге |
 | TypeScript LSP | Реализовано как подключаемый слой | `templates/qwen-settings.phase1-phase2.json`, `docs/phase1-phase2-deployment.md` | Проверить `typescript-language-server --version` и verify |
@@ -52,6 +54,7 @@
    шаблоны в пустой продуктовый репозиторий.
 3. В продуктовом репозитории есть `AGENTS.md`, `QWEN.md`, `.context`,
    `.gigacode.yaml`, `.gigacode-adapter.yaml`, `.gigacode-tools.json`,
+   `.gigacode-kit.json`,
    `.gigacode-adapters/qwen-coder.yaml`,
    `.gigacode-adapters/deepseek-v4-flash.yaml`.
 4. Для выбранного CLI заполнен профиль адаптера на основе starter profile.

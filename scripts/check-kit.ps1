@@ -2,6 +2,7 @@
 
 $root = Split-Path -Parent $PSScriptRoot
 $required = @(
+    "agent-kit.manifest.json",
     "README.md",
     "skills\gigacode-java-enterprise\SKILL.md",
     "skills\gigacode-java-enterprise\references\tool-contracts.md",
@@ -51,6 +52,22 @@ Get-Content -Raw -LiteralPath (Join-Path $root "templates\.lsp.json") | ConvertF
 Get-Content -Raw -LiteralPath (Join-Path $root "templates\qwen-settings.json") | ConvertFrom-Json | Out-Null
 Get-Content -Raw -LiteralPath (Join-Path $root "templates\qwen-settings.phase1-phase2.json") | ConvertFrom-Json | Out-Null
 $toolManifestJson = Get-Content -Raw -LiteralPath (Join-Path $root "templates\tool-manifest.json") | ConvertFrom-Json
+$kitManifestJson = Get-Content -Raw -LiteralPath (Join-Path $root "agent-kit.manifest.json") | ConvertFrom-Json
+
+if ($kitManifestJson.deployment.allowsExternalDownloads -ne $false -or $kitManifestJson.deployment.requiresDocker -ne $false) {
+    throw "agent-kit.manifest.json нарушает политики portable/no-download/no-docker"
+}
+if (@($kitManifestJson.modelAdapters | Where-Object { $_.modelFamily -eq "qwen-coder" }).Count -eq 0) {
+    throw "agent-kit.manifest.json не содержит qwen-coder adapter"
+}
+if (@($kitManifestJson.modelAdapters | Where-Object { $_.modelFamily -eq "deepseek-v4-flash" }).Count -eq 0) {
+    throw "agent-kit.manifest.json не содержит deepseek-v4-flash adapter"
+}
+foreach ($output in @(".gigacode-kit.json", ".gigacode-tools.json", ".gigacode-adapter.yaml")) {
+    if (@($kitManifestJson.templateOutputs) -notcontains $output) {
+        throw "agent-kit.manifest.json не содержит template output: $output"
+    }
+}
 
 $skill = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $root "skills\gigacode-java-enterprise\SKILL.md")
 if ($skill -notmatch '(?s)^---\s+name:\s+gigacode-java-enterprise\s+description:\s+.+?\s+---') {
@@ -118,6 +135,9 @@ if ($copyPs1 -notmatch "\.gigacode-adapter\.yaml" -or $copySh -notmatch "\.gigac
 if ($copyPs1 -notmatch "\.gigacode-tools\.json" -or $copySh -notmatch "\.gigacode-tools\.json") {
     throw "copy-templates скрипты не копируют tool manifest"
 }
+if ($copyPs1 -notmatch "\.gigacode-kit\.json" -or $copySh -notmatch "\.gigacode-kit\.json") {
+    throw "copy-templates скрипты не копируют kit manifest"
+}
 if ($copyPs1 -notmatch "\.gigacode-adapters" -or $copySh -notmatch "\.gigacode-adapters") {
     throw "copy-templates скрипты не копируют профили адаптеров"
 }
@@ -160,6 +180,7 @@ try {
         ".gigacode.yaml",
         ".gigacode-adapter.yaml",
         ".gigacode-tools.json",
+        ".gigacode-kit.json",
         ".gigacode-adapters\qwen-coder.yaml",
         ".gigacode-adapters\deepseek-v4-flash.yaml",
         ".context\index.md",
@@ -177,6 +198,7 @@ try {
 
     Get-Content -Raw -LiteralPath (Join-Path $smokeRoot ".lsp.json") | ConvertFrom-Json | Out-Null
     Get-Content -Raw -LiteralPath (Join-Path $smokeRoot ".gigacode-tools.json") | ConvertFrom-Json | Out-Null
+    $deployedKitManifest = Get-Content -Raw -LiteralPath (Join-Path $smokeRoot ".gigacode-kit.json") | ConvertFrom-Json | Out-Null
 
     $deployedProjectConfig = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $smokeRoot ".gigacode.yaml")
     if ($deployedProjectConfig -notmatch "allow_network_tools:\s*false" -or $deployedProjectConfig -notmatch "require_plan_before_edit:\s*true") {
@@ -196,6 +218,11 @@ try {
     $deployedToolManifest = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $smokeRoot ".gigacode-tools.json")
     if ($deployedToolManifest -notmatch "context.find_change_points" -or $deployedToolManifest -notmatch "code.search_symbols") {
         throw "Smoke-test развёртывания нашёл некорректную .gigacode-tools.json"
+    }
+
+    $deployedKitManifestText = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $smokeRoot ".gigacode-kit.json")
+    if ($deployedKitManifestText -notmatch "deepseek-v4-flash" -or $deployedKitManifestText -notmatch '"allowsExternalDownloads": false') {
+        throw "Smoke-test развёртывания нашёл некорректную .gigacode-kit.json"
     }
 } finally {
     if (Test-Path -LiteralPath $smokeRoot) {

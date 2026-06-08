@@ -57,6 +57,8 @@ SQLite-артефактах.
   DeepSeek v4 Flash;
 - `templates/tool-manifest.json` задаёт машиночитаемый контракт tools для
   MCP, function calling или wrapper-loop;
+- `agent-kit.manifest.json` описывает kit как переносимый пакет: поддерживаемые
+  ОС, модели, output-файлы, проверки и security invariants;
 - имена команд, пути конфигов и способ регистрации MCP нужно уточнить после
   доступа к внутреннему CLI.
 

@@ -4,6 +4,7 @@ set -euo pipefail
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 required=(
+  "agent-kit.manifest.json"
   "README.md"
   "skills/gigacode-java-enterprise/SKILL.md"
   "skills/gigacode-java-enterprise/references/tool-contracts.md"
@@ -58,6 +59,32 @@ python3 -m json.tool "$root/templates/.lsp.json" >/dev/null
 python3 -m json.tool "$root/templates/qwen-settings.json" >/dev/null
 python3 -m json.tool "$root/templates/qwen-settings.phase1-phase2.json" >/dev/null
 python3 -m json.tool "$root/templates/tool-manifest.json" >/dev/null
+python3 -m json.tool "$root/agent-kit.manifest.json" >/dev/null
+
+if ! grep -q '"allowsExternalDownloads": false' "$root/agent-kit.manifest.json"; then
+  echo "agent-kit.manifest.json must forbid external downloads." >&2
+  exit 1
+fi
+
+if ! grep -q '"requiresDocker": false' "$root/agent-kit.manifest.json"; then
+  echo "agent-kit.manifest.json must not require Docker." >&2
+  exit 1
+fi
+
+if ! grep -q '"modelFamily": "qwen-coder"' "$root/agent-kit.manifest.json"; then
+  echo "agent-kit.manifest.json does not contain qwen-coder adapter." >&2
+  exit 1
+fi
+
+if ! grep -q '"modelFamily": "deepseek-v4-flash"' "$root/agent-kit.manifest.json"; then
+  echo "agent-kit.manifest.json does not contain deepseek-v4-flash adapter." >&2
+  exit 1
+fi
+
+if ! grep -q '".gigacode-kit.json"' "$root/agent-kit.manifest.json"; then
+  echo "agent-kit.manifest.json does not list deployed kit manifest." >&2
+  exit 1
+fi
 
 if ! grep -Eq '^---[[:space:]]*$' "$root/skills/gigacode-java-enterprise/SKILL.md"; then
   echo "Skill frontmatter is missing." >&2
@@ -146,6 +173,11 @@ if ! grep -q '.gigacode-tools.json' "$root/scripts/copy-templates.ps1" || ! grep
   exit 1
 fi
 
+if ! grep -q '.gigacode-kit.json' "$root/scripts/copy-templates.ps1" || ! grep -q '.gigacode-kit.json' "$root/scripts/copy-templates.sh"; then
+  echo "copy-templates scripts do not copy kit manifest." >&2
+  exit 1
+fi
+
 if ! grep -q '.gigacode-adapters' "$root/scripts/copy-templates.ps1" || ! grep -q '.gigacode-adapters' "$root/scripts/copy-templates.sh"; then
   echo "copy-templates scripts do not copy adapter profiles." >&2
   exit 1
@@ -193,6 +225,7 @@ deployed_required=(
   ".gigacode.yaml"
   ".gigacode-adapter.yaml"
   ".gigacode-tools.json"
+  ".gigacode-kit.json"
   ".gigacode-adapters/qwen-coder.yaml"
   ".gigacode-adapters/deepseek-v4-flash.yaml"
   ".context/index.md"
@@ -211,6 +244,7 @@ done
 
 python3 -m json.tool "$smoke_root/.lsp.json" >/dev/null
 python3 -m json.tool "$smoke_root/.gigacode-tools.json" >/dev/null
+python3 -m json.tool "$smoke_root/.gigacode-kit.json" >/dev/null
 
 if ! grep -Eq 'allow_network_tools:[[:space:]]*false' "$smoke_root/.gigacode.yaml"; then
   echo "Deployed .gigacode.yaml must forbid network tools." >&2
@@ -239,6 +273,11 @@ fi
 
 if ! grep -q '"name": "context.find_change_points"' "$smoke_root/.gigacode-tools.json" || ! grep -q '"name": "code.search_symbols"' "$smoke_root/.gigacode-tools.json"; then
   echo "Deployed .gigacode-tools.json is incomplete." >&2
+  exit 1
+fi
+
+if ! grep -q '"modelFamily": "deepseek-v4-flash"' "$smoke_root/.gigacode-kit.json" || ! grep -q '"allowsExternalDownloads": false' "$smoke_root/.gigacode-kit.json"; then
+  echo "Deployed .gigacode-kit.json is invalid." >&2
   exit 1
 fi
 

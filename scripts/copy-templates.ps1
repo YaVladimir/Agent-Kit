@@ -14,6 +14,7 @@ Copy-Item -LiteralPath (Join-Path $kitRoot "templates\.lsp.json") -Destination (
 Copy-Item -LiteralPath (Join-Path $kitRoot "templates\.gigacode.yaml") -Destination (Join-Path $target ".gigacode.yaml") -Force
 Copy-Item -LiteralPath (Join-Path $kitRoot "templates\adapter-compatibility.yaml") -Destination (Join-Path $target ".gigacode-adapter.yaml") -Force
 Copy-Item -LiteralPath (Join-Path $kitRoot "templates\tool-manifest.json") -Destination (Join-Path $target ".gigacode-tools.json") -Force
+Copy-Item -LiteralPath (Join-Path $kitRoot "agent-kit.manifest.json") -Destination (Join-Path $target ".gigacode-kit.json") -Force
 
 $adapterExamplesTarget = Join-Path $target ".gigacode-adapters"
 New-Item -ItemType Directory -Force -Path $adapterExamplesTarget | Out-Null
