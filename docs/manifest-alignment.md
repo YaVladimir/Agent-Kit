@@ -25,7 +25,7 @@
 
 | Требование манифеста | Статус | Доказательство в репозитории | Как проверить |
 |---|---|---|---|
-| Шаблонный проект можно развернуть в продуктовом репозитории | Реализовано | `scripts/copy-templates.ps1`, `scripts/copy-templates.sh`, `templates/*`, `scripts/check-kit.ps1` | `check-kit.ps1` запускает smoke-test развёртывания во временный каталог и проверяет `AGENTS.md`, `QWEN.md`, `.context`, `.gigacode.yaml`, `.gigacode-adapter.yaml` |
+| Шаблонный проект можно развернуть в продуктовом репозитории | Реализовано | `scripts/copy-templates.ps1`, `scripts/copy-templates.sh`, `templates/*`, `scripts/check-kit.ps1`, `scripts/check-kit.sh` | `check-kit.ps1` и `check-kit.sh` запускают smoke-test развёртывания во временный каталог и проверяют `AGENTS.md`, `QWEN.md`, `.context`, `.gigacode.yaml`, `.gigacode-adapter.yaml` |
 | Общение агента и текстовые инструкции на русском языке | Реализовано | `README.md`, `prompts/system.md`, `templates/AGENTS.md`, `skills/gigacode-java-enterprise/SKILL.md` | `scripts/check-kit.ps1` проверяет русскоязычное правило в системном промпте |
 | Модель-независимый workflow: задача -> контекст -> поиск -> план -> код -> проверки | Реализовано | `prompts/system.md`, `templates/AGENTS.md`, `skills/gigacode-java-enterprise/SKILL.md`, `docs/model-agnostic-agent-test.md` | Прогнать dry-run из `docs/model-agnostic-agent-test.md` |
 | Интеграция с Qwen Coder / GigaCode CLI | Реализовано как совместимый шаблон | `templates/qwen-settings.json`, `templates/qwen-settings.phase1-phase2.json`, `docs/gigacode-cli-integration.md` | Скопировать settings в `.qwen/settings.json` и запустить совместимый CLI из корня проекта |
@@ -45,7 +45,8 @@
 
 Пилот можно считать готовым на уровне шаблонного проекта, если:
 
-1. `scripts/check-kit.ps1` проходит, включая smoke-test развёртывания шаблонов.
+1. `scripts/check-kit.ps1` или `scripts/check-kit.sh` проходит, включая
+   smoke-test развёртывания шаблонов.
 2. `scripts/copy-templates.ps1` или `scripts/copy-templates.sh` разворачивает
    шаблоны в пустой продуктовый репозиторий.
 3. В продуктовом репозитории есть `AGENTS.md`, `QWEN.md`, `.context`,

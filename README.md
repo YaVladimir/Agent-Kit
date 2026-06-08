@@ -74,6 +74,24 @@ SQLite-артефактах.
 
 Для Windows добавлены отдельные скрипты setup/verify фаз 1+2.
 
+## Проверка kit
+
+На macOS/Linux:
+
+```bash
+chmod +x scripts/check-kit.sh
+./scripts/check-kit.sh
+```
+
+На Windows:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\check-kit.ps1
+```
+
+Обе проверки не скачивают зависимости. Они проверяют структуру проекта,
+политики безопасности и smoke-развёртывание шаблонов во временный каталог.
+
 ## Лицензия
 
 Проект распространяется под лицензией Apache License 2.0. См. файл `LICENSE`.

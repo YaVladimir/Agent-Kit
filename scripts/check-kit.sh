@@ -1,0 +1,170 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+required=(
+  "README.md"
+  "skills/gigacode-java-enterprise/SKILL.md"
+  "skills/gigacode-java-enterprise/references/tool-contracts.md"
+  "prompts/system.md"
+  "templates/AGENTS.md"
+  "templates/.lsp.json"
+  "templates/.gigacode.yaml"
+  "templates/.gitignore.additions"
+  "templates/adapter-compatibility.yaml"
+  "templates/qwen-settings.json"
+  "templates/qwen-settings.phase1-phase2.json"
+  "docs/cli-integration-notes.md"
+  "docs/gigacode-cli-integration.md"
+  "docs/cli-user-guide.md"
+  "docs/phase1-phase2-deployment.md"
+  "docs/model-agnostic-agent-test.md"
+  "docs/model-adapter-contract.md"
+  "docs/manifest-alignment.md"
+  "docs/no-docker-architecture.md"
+  "examples/todoserver-context/index.md"
+  "examples/todoserver-context/glossary.yaml"
+  "examples/todoserver-context/processes/todo-crud.yaml"
+  "examples/todoserver-context/rules/todo-rules.yaml"
+  "mcp/summary-mcp/src/summary_mcp/server.py"
+  "scripts/setup-phase1-phase2-macos.sh"
+  "scripts/setup-phase1-phase2-linux.sh"
+  "scripts/verify-phase1-phase2.sh"
+  "scripts/setup-phase1-phase2-windows.ps1"
+  "scripts/verify-phase1-phase2-windows.ps1"
+  "scripts/copy-templates.sh"
+  "scripts/copy-templates.ps1"
+  "scripts/check-kit.ps1"
+  "mcp/gigacode-context/src/gigacode_context/server.py"
+)
+
+for relative in "${required[@]}"; do
+  if [[ ! -e "$root/$relative" ]]; then
+    echo "Missing required file: $relative" >&2
+    exit 1
+  fi
+done
+
+if ! command -v python3 >/dev/null 2>&1; then
+  echo "python3 is required for JSON validation." >&2
+  exit 1
+fi
+
+python3 -m json.tool "$root/templates/.lsp.json" >/dev/null
+python3 -m json.tool "$root/templates/qwen-settings.json" >/dev/null
+python3 -m json.tool "$root/templates/qwen-settings.phase1-phase2.json" >/dev/null
+
+if ! grep -Eq '^---[[:space:]]*$' "$root/skills/gigacode-java-enterprise/SKILL.md"; then
+  echo "Skill frontmatter is missing." >&2
+  exit 1
+fi
+
+if ! grep -q 'рус' "$root/prompts/system.md"; then
+  echo "System prompt does not mention Russian-language communication." >&2
+  exit 1
+fi
+
+if ! grep -q 'model_family' "$root/templates/adapter-compatibility.yaml"; then
+  echo "adapter-compatibility.yaml does not describe model_family." >&2
+  exit 1
+fi
+
+if ! grep -Eq 'allow_external_downloads:[[:space:]]*false' "$root/templates/adapter-compatibility.yaml"; then
+  echo "adapter-compatibility.yaml must forbid external downloads." >&2
+  exit 1
+fi
+
+if ! grep -q 'Qwen' "$root/docs/model-adapter-contract.md" || ! grep -q 'DeepSeek' "$root/docs/model-adapter-contract.md"; then
+  echo "Model adapter contract must describe Qwen and DeepSeek-like models." >&2
+  exit 1
+fi
+
+if ! grep -q 'Матрица соответствия' "$root/docs/manifest-alignment.md" || ! grep -q 'DeepSeek' "$root/docs/manifest-alignment.md"; then
+  echo "Manifest alignment document is incomplete." >&2
+  exit 1
+fi
+
+if ! grep -q '.gigacode-adapter.yaml' "$root/scripts/copy-templates.ps1" || ! grep -q '.gigacode-adapter.yaml' "$root/scripts/copy-templates.sh"; then
+  echo "copy-templates scripts do not copy adapter profile." >&2
+  exit 1
+fi
+
+setup_scripts=(
+  "scripts/setup-phase1-phase2-macos.sh"
+  "scripts/setup-phase1-phase2-linux.sh"
+  "scripts/setup-phase1-phase2-windows.ps1"
+)
+forbidden_installers=(
+  "curl"
+  "Invoke-WebRequest"
+  "Invoke-RestMethod"
+  "go install"
+  "npm install"
+  "pip install"
+  "winget"
+  "choco"
+  "brew install"
+  "apt install"
+)
+
+for relative in "${setup_scripts[@]}"; do
+  for pattern in "${forbidden_installers[@]}"; do
+    if grep -Fq "$pattern" "$root/$relative"; then
+      echo "Setup script contains forbidden installer '$pattern': $relative" >&2
+      exit 1
+    fi
+  done
+done
+
+smoke_root="$(mktemp -d "${TMPDIR:-/tmp}/gigacode-agent-kit-smoke.XXXXXX")"
+cleanup() {
+  rm -rf "$smoke_root"
+}
+trap cleanup EXIT
+
+"$root/scripts/copy-templates.sh" "$smoke_root" >/dev/null
+
+deployed_required=(
+  "AGENTS.md"
+  "QWEN.md"
+  ".lsp.json"
+  ".gigacode.yaml"
+  ".gigacode-adapter.yaml"
+  ".context/index.md"
+  ".context/architecture.md"
+  ".context/glossary.yaml"
+  ".context/processes/example-process.yaml"
+  ".context/rules/example-rules.yaml"
+)
+
+for relative in "${deployed_required[@]}"; do
+  if [[ ! -e "$smoke_root/$relative" ]]; then
+    echo "Smoke deployment did not create: $relative" >&2
+    exit 1
+  fi
+done
+
+python3 -m json.tool "$smoke_root/.lsp.json" >/dev/null
+
+if ! grep -Eq 'allow_network_tools:[[:space:]]*false' "$smoke_root/.gigacode.yaml"; then
+  echo "Deployed .gigacode.yaml must forbid network tools." >&2
+  exit 1
+fi
+
+if ! grep -Eq 'require_plan_before_edit:[[:space:]]*true' "$smoke_root/.gigacode.yaml"; then
+  echo "Deployed .gigacode.yaml must require plan before edit." >&2
+  exit 1
+fi
+
+if ! grep -q 'model_family' "$smoke_root/.gigacode-adapter.yaml"; then
+  echo "Deployed .gigacode-adapter.yaml does not describe model_family." >&2
+  exit 1
+fi
+
+if ! grep -Eq 'allow_external_downloads:[[:space:]]*false' "$smoke_root/.gigacode-adapter.yaml"; then
+  echo "Deployed .gigacode-adapter.yaml must forbid external downloads." >&2
+  exit 1
+fi
+
+echo "GigaCode Agent Kit structure looks valid."

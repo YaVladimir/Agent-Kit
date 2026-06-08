@@ -33,6 +33,7 @@ $required = @(
     "scripts\verify-phase1-phase2-windows.ps1",
     "scripts\copy-templates.sh",
     "scripts\copy-templates.ps1",
+    "scripts\check-kit.sh",
     "mcp\gigacode-context\src\gigacode_context\server.py"
 )
 
