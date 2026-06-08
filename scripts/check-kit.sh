@@ -5,6 +5,7 @@ root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 required=(
   "agent-kit.manifest.json"
+  ".github/workflows/check-kit.yml"
   "README.md"
   "skills/gigacode-java-enterprise/SKILL.md"
   "skills/gigacode-java-enterprise/references/tool-contracts.md"

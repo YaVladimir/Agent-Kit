@@ -1,0 +1,37 @@
+name: check-kit
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - feat/phase1-phase2-setup
+
+jobs:
+  windows:
+    name: Windows kit check
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run check-kit.ps1
+        shell: pwsh
+        run: powershell -ExecutionPolicy Bypass -File .\scripts\check-kit.ps1
+
+  unix:
+    name: ${{ matrix.os }} kit check
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run check-kit.sh
+        shell: bash
+        run: |
+          chmod +x ./scripts/check-kit.sh
+          ./scripts/check-kit.sh

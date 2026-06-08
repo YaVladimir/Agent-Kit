@@ -101,6 +101,9 @@ powershell -ExecutionPolicy Bypass -File .\scripts\check-kit.ps1
 
 Обе проверки не скачивают зависимости. Они проверяют структуру проекта,
 политики безопасности и smoke-развёртывание шаблонов во временный каталог.
+Для публичного репозитория добавлен GitHub Actions gate
+`.github/workflows/check-kit.yml`, который запускает эти проверки на Windows,
+Linux и macOS.
 
 ## Лицензия
 

@@ -100,6 +100,7 @@
   "checks": {
     "macosLinux": "scripts/check-kit.sh",
     "windows": "scripts/check-kit.ps1",
+    "crossPlatformCi": ".github/workflows/check-kit.yml",
     "phase1Phase2Macos": "scripts/setup-phase1-phase2-macos.sh && scripts/verify-phase1-phase2.sh",
     "phase1Phase2Linux": "scripts/setup-phase1-phase2-linux.sh && scripts/verify-phase1-phase2.sh",
     "phase1Phase2Windows": "scripts/setup-phase1-phase2-windows.ps1; scripts/verify-phase1-phase2-windows.ps1"
