@@ -27,6 +27,7 @@ repo-root/
   QWEN.md
   .lsp.json
   .gigacode.yaml
+  .gigacode-adapter.yaml
   .context/
     index.md
     architecture.md
@@ -40,6 +41,8 @@ repo-root/
 `.context` содержит знания о продукте.  
 `.lsp.json` нужен только для LSP-навигации.  
 `.gigacode.yaml` хранит настройки проекта, понятные wrapper'у.
+`.gigacode-adapter.yaml` фиксирует совместимость конкретного CLI/wrapper с
+контрактом kit.
 
 ## Слои промптов
 

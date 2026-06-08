@@ -49,6 +49,10 @@ SQLite-артефактах.
 - MCP реализован как локальный stdio-процесс;
 - `templates/qwen-settings.json` является совместимым шаблоном, а не финальным
   контрактом корпоративного CLI;
+- `docs/model-adapter-contract.md` описывает слой адаптера для Qwen Coder,
+  DeepSeek-like и других корпоративных моделей;
+- `templates/adapter-compatibility.yaml` фиксирует, какие возможности должен
+  предоставить конкретный CLI/wrapper;
 - имена команд, пути конфигов и способ регистрации MCP нужно уточнить после
   доступа к внутреннему CLI.
 
@@ -61,6 +65,8 @@ SQLite-артефактах.
 - `docs/phase1-phase2-deployment.md`: как поднять инструменты и MCP для фаз 1+2.
 - `docs/model-agnostic-agent-test.md`: как проверять workflow независимо от
   конкретной модели.
+- `docs/model-adapter-contract.md`: какой контракт должен выполнить CLI/wrapper,
+  чтобы kit работал с Qwen Coder, DeepSeek-like или другой LLM.
 - `docs/no-docker-architecture.md`: как запускать пилот без Docker и Neo4j.
 - `docs/pilot-playbook.md`: как провести первый пилот на одном репозитории.
 
