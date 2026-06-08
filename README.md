@@ -67,6 +67,8 @@ SQLite-артефактах.
   конкретной модели.
 - `docs/model-adapter-contract.md`: какой контракт должен выполнить CLI/wrapper,
   чтобы kit работал с Qwen Coder, DeepSeek-like или другой LLM.
+- `docs/manifest-alignment.md`: матрица соответствия kit исходному манифесту
+  внедрения.
 - `docs/no-docker-architecture.md`: как запускать пилот без Docker и Neo4j.
 - `docs/pilot-playbook.md`: как провести первый пилот на одном репозитории.
 

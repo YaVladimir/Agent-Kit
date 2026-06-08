@@ -18,6 +18,7 @@ $required = @(
     "docs\phase1-phase2-deployment.md",
     "docs\model-agnostic-agent-test.md",
     "docs\model-adapter-contract.md",
+    "docs\manifest-alignment.md",
     "docs\no-docker-architecture.md",
     "examples\todoserver-context\index.md",
     "examples\todoserver-context\glossary.yaml",
@@ -63,6 +64,11 @@ if ($adapterProfile -notmatch "model_family" -or $adapterProfile -notmatch "allo
 $adapterContract = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $root "docs\model-adapter-contract.md")
 if ($adapterContract -notmatch "Qwen" -or $adapterContract -notmatch "DeepSeek") {
     throw "Контракт адаптера не описывает Qwen/DeepSeek-like модели"
+}
+
+$manifestAlignment = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $root "docs\manifest-alignment.md")
+if ($manifestAlignment -notmatch "Матрица соответствия" -or $manifestAlignment -notmatch "Фаза 1" -or $manifestAlignment -notmatch "DeepSeek") {
+    throw "Матрица соответствия манифесту неполная"
 }
 
 $copyPs1 = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $root "scripts\copy-templates.ps1")
