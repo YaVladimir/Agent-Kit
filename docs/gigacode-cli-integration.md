@@ -38,6 +38,7 @@ repo-root/
     index.md
     architecture.md
     architecture-graph.yaml
+    domain-intake.md
     glossary.yaml
     processes/
     rules/

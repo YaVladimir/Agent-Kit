@@ -15,16 +15,18 @@
 - доменный `.context`;
 - локальные stdio MCP-серверы `gigacode-context` и `summary-mcp`;
 - локальный no-Docker MCP-сервер `architecture-mcp` для архитектурного графа;
+- ручной workflow фазы 4 для интервью, extraction, ревью и Definition of Done;
 - Qwen-compatible MCP config;
 - контракт адаптера для Qwen Coder, DeepSeek v4 Flash, DeepSeek-like и других LLM;
 - machine-readable passport kit в `agent-kit.manifest.json`;
 - no-Docker сценарий;
 - корпоративно безопасный manual setup без скрытых внешних загрузок.
 
-Расширенная фаза 3 с Neo4j/jQAssistant/Joern и расширенная фаза 4 с интервью,
-транскрибацией и extraction остаются roadmap-слоями. Для шаблонного проекта
-готов минимальный файловый backend, который можно заменить корпоративным
-графовым backend без смены агентского workflow.
+Расширенная фаза 3 с Neo4j/jQAssistant/Joern остаётся roadmap-слоем. Для
+шаблонного проекта готов минимальный файловый backend, который можно заменить
+корпоративным графовым backend без смены агентского workflow. Для расширенной
+фазы 4 готов ручной безопасный workflow; конкретная транскрибация подключается
+только из approved внутренних источников.
 
 ## Матрица соответствия
 
@@ -42,11 +44,11 @@
 | TypeScript LSP | Реализовано как подключаемый слой | `templates/qwen-settings.phase1-phase2.json`, `docs/phase1-phase2-deployment.md` | Проверить `typescript-language-server --version` и verify |
 | Фаза 2: иерархические summary | Реализован минимальный MCP | `mcp/summary-mcp/src/summary_mcp/server.py`, `templates/qwen-settings.phase1-phase2.json` | Запустить `summary-mcp` как stdio MCP и проверить tools `get_summary`, `find_module`, `list_packages` |
 | Фаза 4: доменный контекст | Реализован базовый слой | `templates/context/*`, `schemas/*.yaml`, `mcp/gigacode-context/src/gigacode_context/server.py`, `templates/tool-manifest.json`, `examples/todoserver-context/*` | Заполнить `.context`, запустить `gigacode-context`, проверить `repo_overview`, `lookup_domain`, `translate_task`, `find_rule`, `list_processes`, `list_rules`, `find_change_points` |
+| Фаза 4: интервью, extraction и поддержание домена | Реализовано как ручной workflow | `docs/domain-knowledge-workflow.md`, `templates/domain-interview.md`, `prompts/domain-extraction.md`, `templates/context/domain-intake.md` | Провести 3 сессии по шаблону, извлечь YAML через approved LLM/tooling, пройти ревью продакта и техлида, обновить `.context` как часть DoD |
 | No-Docker пилот | Реализовано | `docs/no-docker-architecture.md`, `docs/phase1-phase2-deployment.md` | Использовать локальные файлы/SQLite/approved artifacts вместо Docker-сервисов |
 | Корпоративная безопасность: без автоматической загрузки стороннего софта | Реализовано | `scripts/setup-phase1-phase2-*`, `docs/phase1-phase2-deployment.md`, `scripts/check-kit.ps1` | `check-kit.ps1` запрещает автоустановочные команды в setup-скриптах |
 | Фаза 3: архитектурный граф без Docker | Реализован минимальный MCP | `mcp/architecture-mcp/src/architecture_mcp/server.py`, `templates/context/architecture-graph.yaml`, `schemas/architecture-graph.schema.yaml`, `templates/tool-manifest.json` | Заполнить `.context/architecture-graph.yaml`, запустить `architecture-mcp`, проверить `trace_endpoint_to_db`, `find_blast_radius`, `check_layer_violations`, `find_spring_wiring` |
 | Фаза 3: Neo4j/jQAssistant/Joern backend | Отложено как расширение | `docs/phase1-phase2-deployment.md`, `docs/no-docker-architecture.md` | Для пилота используется файловый no-Docker backend; Neo4j/jQAssistant подключаются позже как другой backend того же tool contract |
-| Расширенная фаза 4: интервью, транскрибация, extraction | Отложено | `docs/phase1-phase2-deployment.md`, манифест | Нужен отдельный workflow после согласования процесса с продуктом и безопасниками |
 | Open-source лицензирование | Реализовано | `LICENSE`, `NOTICE`, `README.md` | Проверить Apache License 2.0 |
 
 ## Что считается готовым для пилота

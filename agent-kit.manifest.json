@@ -42,6 +42,7 @@
     ".context/index.md",
     ".context/architecture.md",
     ".context/architecture-graph.yaml",
+    ".context/domain-intake.md",
     ".context/glossary.yaml",
     ".context/processes/example-process.yaml",
     ".context/rules/example-rules.yaml"
@@ -85,8 +86,11 @@
     {
       "id": "phase-4",
       "name": "domain-context",
-      "status": "base-layer-ready",
+      "status": "base-layer-and-intake-workflow-ready",
       "evidence": [
+        "docs/domain-knowledge-workflow.md",
+        "templates/domain-interview.md",
+        "prompts/domain-extraction.md",
         "templates/context",
         "schemas",
         "mcp/gigacode-context/src/gigacode_context/server.py"

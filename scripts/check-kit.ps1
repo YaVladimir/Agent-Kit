@@ -7,7 +7,9 @@ $required = @(
     "skills\gigacode-java-enterprise\SKILL.md",
     "skills\gigacode-java-enterprise\references\tool-contracts.md",
     "prompts\system.md",
+    "prompts\domain-extraction.md",
     "templates\AGENTS.md",
+    "templates\domain-interview.md",
     "templates\.lsp.json",
     "templates\.gigacode.yaml",
     "templates\.gitignore.additions",
@@ -22,6 +24,7 @@ $required = @(
     "docs\gigacode-cli-integration.md",
     "docs\cli-user-guide.md",
     "docs\phase1-phase2-deployment.md",
+    "docs\domain-knowledge-workflow.md",
     "docs\model-agnostic-agent-test.md",
     "docs\model-adapter-contract.md",
     "docs\manifest-alignment.md",
@@ -72,6 +75,9 @@ foreach ($output in @(".gigacode-kit.json", ".gigacode-tools.json", ".gigacode-a
     if (@($kitManifestJson.templateOutputs) -notcontains $output) {
         throw "agent-kit.manifest.json не содержит template output: $output"
     }
+}
+if (@($kitManifestJson.templateOutputs) -notcontains ".context/domain-intake.md") {
+    throw "agent-kit.manifest.json не содержит template output: .context/domain-intake.md"
 }
 
 $skill = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $root "skills\gigacode-java-enterprise\SKILL.md")
@@ -199,6 +205,7 @@ try {
         ".context\index.md",
         ".context\architecture.md",
         ".context\architecture-graph.yaml",
+        ".context\domain-intake.md",
         ".context\glossary.yaml",
         ".context\processes\example-process.yaml",
         ".context\rules\example-rules.yaml"

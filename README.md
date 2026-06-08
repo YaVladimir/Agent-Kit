@@ -71,6 +71,8 @@ SQLite-артефактах.
 - `docs/cli-user-guide.md`: как разработчику пользоваться CLI и просить агента
   работать через MCP.
 - `docs/phase1-phase2-deployment.md`: как поднять инструменты и MCP для фаз 1+2.
+- `docs/domain-knowledge-workflow.md`: как собирать доменный контекст через
+  интервью, extraction prompt, ревью и DoD.
 - `docs/model-agnostic-agent-test.md`: как проверять workflow независимо от
   конкретной модели.
 - `docs/model-adapter-contract.md`: какой контракт должен выполнить CLI/wrapper,

@@ -9,7 +9,9 @@ required=(
   "skills/gigacode-java-enterprise/SKILL.md"
   "skills/gigacode-java-enterprise/references/tool-contracts.md"
   "prompts/system.md"
+  "prompts/domain-extraction.md"
   "templates/AGENTS.md"
+  "templates/domain-interview.md"
   "templates/.lsp.json"
   "templates/.gigacode.yaml"
   "templates/.gitignore.additions"
@@ -25,6 +27,7 @@ required=(
   "docs/gigacode-cli-integration.md"
   "docs/cli-user-guide.md"
   "docs/phase1-phase2-deployment.md"
+  "docs/domain-knowledge-workflow.md"
   "docs/model-agnostic-agent-test.md"
   "docs/model-adapter-contract.md"
   "docs/manifest-alignment.md"
@@ -88,6 +91,11 @@ fi
 
 if ! grep -q '".gigacode-kit.json"' "$root/agent-kit.manifest.json"; then
   echo "agent-kit.manifest.json does not list deployed kit manifest." >&2
+  exit 1
+fi
+
+if ! grep -q '".context/domain-intake.md"' "$root/agent-kit.manifest.json"; then
+  echo "agent-kit.manifest.json does not list domain intake template." >&2
   exit 1
 fi
 
@@ -244,6 +252,7 @@ deployed_required=(
   ".context/index.md"
   ".context/architecture.md"
   ".context/architecture-graph.yaml"
+  ".context/domain-intake.md"
   ".context/glossary.yaml"
   ".context/processes/example-process.yaml"
   ".context/rules/example-rules.yaml"
