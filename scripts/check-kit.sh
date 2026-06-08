@@ -135,6 +135,10 @@ required_tool_names=(
   "context.repo_overview"
   "context.lookup_domain"
   "context.find_change_points"
+  "domain.translate_task"
+  "domain.find_rule"
+  "domain.list_processes"
+  "domain.list_rules"
   "summary.get_summary"
   "summary.find_module"
   "code.search_symbols"
@@ -271,7 +275,7 @@ if ! grep -q 'deepseek-v4-flash' "$smoke_root/.gigacode-adapters/deepseek-v4-fla
   exit 1
 fi
 
-if ! grep -q '"name": "context.find_change_points"' "$smoke_root/.gigacode-tools.json" || ! grep -q '"name": "code.search_symbols"' "$smoke_root/.gigacode-tools.json"; then
+if ! grep -q '"name": "context.find_change_points"' "$smoke_root/.gigacode-tools.json" || ! grep -q '"name": "domain.translate_task"' "$smoke_root/.gigacode-tools.json" || ! grep -q '"name": "code.search_symbols"' "$smoke_root/.gigacode-tools.json"; then
   echo "Deployed .gigacode-tools.json is incomplete." >&2
   exit 1
 fi

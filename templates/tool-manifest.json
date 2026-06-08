@@ -44,6 +44,78 @@
       }
     },
     {
+      "name": "domain.translate_task",
+      "kind": "domain",
+      "description": "Перевести бизнес-задачу в найденные термины, процессы, правила, точки изменения и первичный план.",
+      "backend": {
+        "type": "mcp",
+        "server": "gigacode-context",
+        "tool": "translate_task"
+      },
+      "inputSchema": {
+        "type": "object",
+        "required": ["task"],
+        "properties": {
+          "task": {
+            "type": "string",
+            "description": "Бизнес-задача на языке пользователя или продакт-овнера."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "domain.find_rule",
+      "kind": "domain",
+      "description": "Найти бизнес-правила по id, названию, описанию, процессу, термину или связанному коду.",
+      "backend": {
+        "type": "mcp",
+        "server": "gigacode-context",
+        "tool": "find_rule"
+      },
+      "inputSchema": {
+        "type": "object",
+        "required": ["query"],
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Фрагмент правила, id, бизнес-термин, процесс или имя класса."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "domain.list_processes",
+      "kind": "domain",
+      "description": "Перечислить бизнес-процессы из .context/processes.",
+      "backend": {
+        "type": "mcp",
+        "server": "gigacode-context",
+        "tool": "list_processes"
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "domain.list_rules",
+      "kind": "domain",
+      "description": "Перечислить бизнес-правила из .context/rules.",
+      "backend": {
+        "type": "mcp",
+        "server": "gigacode-context",
+        "tool": "list_rules"
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    },
+    {
       "name": "context.get_module_summary",
       "kind": "context",
       "description": "Вернуть назначение модуля, ключевые пакеты и типовые точки изменения.",

@@ -11,7 +11,8 @@ HTTP-маршруты и публичные API.
 1. Переформулируй задачу простыми словами.
 2. Прочитай `.context/index.md` и `.context/architecture.md`, если они есть.
 3. Для бизнес-задач изучи `.context/glossary.yaml`, `.context/processes` и
-   `.context/rules`.
+   `.context/rules`; если доступен MCP/wrapper, сначала вызови
+   `domain.translate_task` или backend tool `translate_task`.
 4. Используй LSP/MCP для поиска определений, использований, реализаций и тестов.
 5. Переиспользуй существующие паттерны. Не дублируй бизнес-логику.
 6. Покажи короткий план перед нетривиальными изменениями.

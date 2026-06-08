@@ -102,6 +102,10 @@ $requiredToolNames = @(
     "context.repo_overview",
     "context.lookup_domain",
     "context.find_change_points",
+    "domain.translate_task",
+    "domain.find_rule",
+    "domain.list_processes",
+    "domain.list_rules",
     "summary.get_summary",
     "summary.find_module",
     "code.search_symbols",
@@ -216,7 +220,7 @@ try {
     }
 
     $deployedToolManifest = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $smokeRoot ".gigacode-tools.json")
-    if ($deployedToolManifest -notmatch "context.find_change_points" -or $deployedToolManifest -notmatch "code.search_symbols") {
+    if ($deployedToolManifest -notmatch "context.find_change_points" -or $deployedToolManifest -notmatch "domain.translate_task" -or $deployedToolManifest -notmatch "code.search_symbols") {
         throw "Smoke-test развёртывания нашёл некорректную .gigacode-tools.json"
     }
 

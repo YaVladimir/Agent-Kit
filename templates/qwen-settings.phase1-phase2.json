@@ -45,6 +45,10 @@
       "includeTools": [
         "repo_overview",
         "lookup_domain",
+        "translate_task",
+        "find_rule",
+        "list_processes",
+        "list_rules",
         "get_module_summary",
         "find_change_points"
       ],
@@ -53,4 +57,3 @@
     }
   }
 }
-
