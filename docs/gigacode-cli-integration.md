@@ -197,23 +197,14 @@ LSP -> включить позже
 6. Для Lombok/MapStruct учитывать annotation processing: JDT LS часто требует
    корректный Maven import и доступ к dependency cache.
 
-Установка `jdtls` зависит от ОС:
+Установка `jdtls` выполняется только из одобренного внутреннего источника:
 
-```bash
-# macOS Apple Silicon / Intel, если разрешён Homebrew
-brew install jdtls
-
-# Linux Debian/Ubuntu, если пакет есть в репозиториях
-sudo apt install jdtls
-
-# Универсальный вариант
-# скачать Eclipse JDT LS во внутренний approved tools каталог
-# и указать абсолютный путь в .lsp.json
+```text
+1. Получить approved-архив Eclipse JDT LS из внутреннего источника.
+2. Распаковать его во внутренний каталог инструментов.
+3. Добавить launcher jdtls/jdtls.bat в PATH или указать абсолютный путь в .lsp.json.
+4. Проверить java -version и запуск jdtls.
 ```
-
-Если Homebrew/apt запрещены корпоративной политикой, лучше разложить approved
-JDT LS архив во внутренний каталог инструментов и ссылаться на него абсолютным
-путём.
 
 Если LSP падает, не блокируй пилот. Зафиксируй проблему и используй
 `basecode-mcp-server` как основной навигационный слой.
