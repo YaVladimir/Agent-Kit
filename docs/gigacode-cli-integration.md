@@ -13,7 +13,8 @@
 
 1. Общается на русском языке.
 2. Читает `AGENTS.md`, `QWEN.md` и `.context`.
-3. Видит MCP-инструменты `basecode-mcp-server` и `gigacode-context`.
+3. Видит MCP-инструменты `basecode-mcp-server`, `gigacode-context` и
+   `architecture-mcp`.
 4. Перед правками ищет контекст через MCP, а не только через `grep`.
 5. Использует LSP, если он доступен, но не блокируется без LSP.
 
@@ -36,6 +37,7 @@ repo-root/
   .context/
     index.md
     architecture.md
+    architecture-graph.yaml
     glossary.yaml
     processes/
     rules/
@@ -43,7 +45,7 @@ repo-root/
 
 `AGENTS.md` задаёт поведение агента.  
 `QWEN.md` подключает верхнеуровневый контекст.  
-`.context` содержит знания о продукте.  
+`.context` содержит знания о продукте и минимальный архитектурный граф.
 `.lsp.json` нужен только для LSP-навигации.  
 `.gigacode.yaml` хранит настройки проекта, понятные wrapper'у.
 `.gigacode-adapter.yaml` фиксирует совместимость конкретного CLI/wrapper с
@@ -96,6 +98,19 @@ GigaCode CLI желательно сделать совместимым с эт�
         "lookup_domain",
         "get_module_summary",
         "find_change_points"
+      ],
+      "timeout": 30000,
+      "trust": false
+    },
+    "architecture": {
+      "command": "python3",
+      "args": ["mcp/architecture-mcp/src/architecture_mcp/server.py"],
+      "cwd": ".",
+      "includeTools": [
+        "trace_endpoint_to_db",
+        "find_blast_radius",
+        "check_layer_violations",
+        "find_spring_wiring"
       ],
       "timeout": 30000,
       "trust": false
@@ -197,6 +212,7 @@ LSP полезен, но для первого пилота не обязате�
 ```text
 basecode MCP -> поиск символов, чтение определений, связи, примеры
 gigacode-context MCP -> бизнес-контекст и точки изменения
+architecture MCP -> endpoint-to-db, blast radius, layer violations, Spring wiring
 rg/read-file -> резервный поиск
 LSP -> включить позже
 ```
@@ -233,7 +249,8 @@ LSP -> включить позже
 2. Покажи доступные MCP-инструменты.
 3. Через basecode найди основной service.
 4. Через .context объясни архитектуру проекта.
-5. Составь план, куда добавлять новое поле Todo.
+5. Через architecture tools проверь blast radius или объясни, что граф пустой.
+6. Составь план, куда добавлять новое поле Todo.
 ```
 
 Ожидаемый результат: агент отвечает на русском, вызывает MCP, не пишет код до

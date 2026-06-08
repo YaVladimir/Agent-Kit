@@ -299,6 +299,92 @@
         },
         "additionalProperties": false
       }
+    },
+    {
+      "name": "architecture.trace_endpoint_to_db",
+      "kind": "architecture",
+      "description": "Построить цепочку endpoint -> controller -> service -> repository -> DB по no-Docker архитектурному графу.",
+      "backend": {
+        "type": "mcp",
+        "server": "architecture",
+        "tool": "trace_endpoint_to_db"
+      },
+      "inputSchema": {
+        "type": "object",
+        "required": ["endpoint"],
+        "properties": {
+          "endpoint": {
+            "type": "string",
+            "description": "HTTP path, имя endpoint или фрагмент контроллера."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "architecture.find_blast_radius",
+      "kind": "architecture",
+      "description": "Найти известные зависимости, endpoint'ы, Spring wiring и тесты вокруг класса, bean или модуля.",
+      "backend": {
+        "type": "mcp",
+        "server": "architecture",
+        "tool": "find_blast_radius"
+      },
+      "inputSchema": {
+        "type": "object",
+        "required": ["symbol"],
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "description": "Класс, bean, модуль, endpoint или таблица."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "architecture.check_layer_violations",
+      "kind": "architecture",
+      "description": "Проверить известные нарушения слоев по архитектурному графу.",
+      "backend": {
+        "type": "mcp",
+        "server": "architecture",
+        "tool": "check_layer_violations"
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Опциональный список измененных файлов, классов или модулей."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "architecture.find_spring_wiring",
+      "kind": "architecture",
+      "description": "Найти Spring bean wiring, зависимости и тесты для компонента.",
+      "backend": {
+        "type": "mcp",
+        "server": "architecture",
+        "tool": "find_spring_wiring"
+      },
+      "inputSchema": {
+        "type": "object",
+        "required": ["component"],
+        "properties": {
+          "component": {
+            "type": "string",
+            "description": "Имя bean, класса или компонента."
+          }
+        },
+        "additionalProperties": false
+      }
     }
   ]
 }

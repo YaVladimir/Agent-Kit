@@ -1,0 +1,47 @@
+version: 1
+description: Минимальный no-Docker архитектурный граф репозитория.
+layer_policy:
+  description: Правила слоев, которые агент обязан учитывать перед изменениями.
+  layers:
+    - name: api
+      may_depend_on: [application]
+    - name: application
+      may_depend_on: [domain, infrastructure]
+    - name: domain
+      may_depend_on: []
+    - name: infrastructure
+      may_depend_on: [domain]
+modules:
+  - name: example-module
+    layer: application
+    path: example-module
+    owners: []
+    tests: []
+endpoints:
+  - path: /api/example
+    method: GET
+    name: Получить пример
+    controller: ExampleController
+    service: ExampleService
+    repository: ExampleRepository
+    tables:
+      - example_table
+    tests:
+      - ExampleControllerTest
+dependencies:
+  - source: ExampleController
+    target: ExampleService
+    type: calls
+    allowed: true
+  - source: ExampleService
+    target: ExampleRepository
+    type: calls
+    allowed: true
+spring_beans:
+  - name: exampleService
+    class: ExampleService
+    layer: application
+    dependencies:
+      - ExampleRepository
+    tests:
+      - ExampleServiceTest

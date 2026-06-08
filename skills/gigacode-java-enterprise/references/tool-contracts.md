@@ -54,6 +54,16 @@ MCP mapping, function calling или ручного wrapper-loop.
 
 ## Архитектурные инструменты
 
-`architecture.check(files)`
+`architecture.trace_endpoint_to_db(endpoint)`
+: Построить цепочку endpoint → controller → service → repository → DB.
+
+`architecture.find_blast_radius(symbol)`
+: Найти известные зависимости, endpoint'ы, Spring wiring и тесты вокруг класса,
+bean, endpoint или модуля.
+
+`architecture.check_layer_violations(files)`
 : Проверить правила слоёв, запрещённые зависимости, изменения публичных API и
 границы владения модулей.
+
+`architecture.find_spring_wiring(component)`
+: Найти Spring bean wiring, зависимости и тесты для компонента.

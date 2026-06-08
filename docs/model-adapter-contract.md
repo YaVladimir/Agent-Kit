@@ -16,6 +16,7 @@ DeepSeek-like модель, GigaCode или другая корпоративн�
 - `schemas/*.yaml`.
 - MCP tool contracts из `skills/gigacode-java-enterprise/references/tool-contracts.md`.
 - Машиночитаемый tool manifest из `.gigacode-tools.json`.
+- Архитектурный no-Docker граф `.context/architecture-graph.yaml`.
 - Ручной runbook развертывания фаз 1+2.
 
 Если меняется модель, эти файлы можно уточнять, но не нужно заводить отдельную
@@ -155,6 +156,9 @@ manifest или явно сообщить агенту, что tool недост
 - [ ] MCP tools имеют стабильные имена и схемы.
 - [ ] Wrapper читает `.gigacode-tools.json` или эквивалентный внутренний
   tool manifest.
+- [ ] Wrapper поддерживает architecture tools или маппит их на внутренний
+  backend: `trace_endpoint_to_db`, `find_blast_radius`,
+  `check_layer_violations`, `find_spring_wiring`.
 - [ ] Агент показывает план перед нетривиальными изменениями.
 - [ ] Агент запускает проверки или объясняет, почему они недоступны.
 - [ ] Setup/preflight не скачивает сторонний софт.

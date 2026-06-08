@@ -41,6 +41,7 @@
     ".gigacode-adapters/deepseek-v4-flash.yaml",
     ".context/index.md",
     ".context/architecture.md",
+    ".context/architecture-graph.yaml",
     ".context/glossary.yaml",
     ".context/processes/example-process.yaml",
     ".context/rules/example-rules.yaml"
@@ -73,8 +74,10 @@
     {
       "id": "phase-3",
       "name": "architecture-graph",
-      "status": "deferred",
+      "status": "minimal-no-docker-mcp-ready",
       "evidence": [
+        "mcp/architecture-mcp/src/architecture_mcp/server.py",
+        "templates/context/architecture-graph.yaml",
         "docs/no-docker-architecture.md",
         "docs/manifest-alignment.md"
       ]

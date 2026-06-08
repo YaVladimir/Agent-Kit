@@ -7,20 +7,24 @@
 
 ## Итоговый статус
 
-Текущий kit закрывает переносимый пилот для фаз 1, 2 и базовой части фазы 4:
+Текущий kit закрывает переносимый пилот для фаз 1, 2, минимальной no-Docker
+фазы 3 и базовой части фазы 4:
 
 - агентский workflow и русскоязычные инструкции;
 - шаблоны для продуктового репозитория;
 - доменный `.context`;
 - локальные stdio MCP-серверы `gigacode-context` и `summary-mcp`;
+- локальный no-Docker MCP-сервер `architecture-mcp` для архитектурного графа;
 - Qwen-compatible MCP config;
 - контракт адаптера для Qwen Coder, DeepSeek v4 Flash, DeepSeek-like и других LLM;
 - machine-readable passport kit в `agent-kit.manifest.json`;
 - no-Docker сценарий;
 - корпоративно безопасный manual setup без скрытых внешних загрузок.
 
-Фаза 3 и расширенная фаза 4 описаны как целевая архитектура и не считаются
-готовыми runtime-компонентами этого шаблонного проекта.
+Расширенная фаза 3 с Neo4j/jQAssistant/Joern и расширенная фаза 4 с интервью,
+транскрибацией и extraction остаются roadmap-слоями. Для шаблонного проекта
+готов минимальный файловый backend, который можно заменить корпоративным
+графовым backend без смены агентского workflow.
 
 ## Матрица соответствия
 
@@ -40,7 +44,8 @@
 | Фаза 4: доменный контекст | Реализован базовый слой | `templates/context/*`, `schemas/*.yaml`, `mcp/gigacode-context/src/gigacode_context/server.py`, `templates/tool-manifest.json`, `examples/todoserver-context/*` | Заполнить `.context`, запустить `gigacode-context`, проверить `repo_overview`, `lookup_domain`, `translate_task`, `find_rule`, `list_processes`, `list_rules`, `find_change_points` |
 | No-Docker пилот | Реализовано | `docs/no-docker-architecture.md`, `docs/phase1-phase2-deployment.md` | Использовать локальные файлы/SQLite/approved artifacts вместо Docker-сервисов |
 | Корпоративная безопасность: без автоматической загрузки стороннего софта | Реализовано | `scripts/setup-phase1-phase2-*`, `docs/phase1-phase2-deployment.md`, `scripts/check-kit.ps1` | `check-kit.ps1` запрещает автоустановочные команды в setup-скриптах |
-| Фаза 3: Neo4j/jQAssistant/Joern | Отложено | `docs/phase1-phase2-deployment.md`, `docs/no-docker-architecture.md` | Для пилота не требуется; отдельная реализация нужна после согласования инфраструктуры |
+| Фаза 3: архитектурный граф без Docker | Реализован минимальный MCP | `mcp/architecture-mcp/src/architecture_mcp/server.py`, `templates/context/architecture-graph.yaml`, `schemas/architecture-graph.schema.yaml`, `templates/tool-manifest.json` | Заполнить `.context/architecture-graph.yaml`, запустить `architecture-mcp`, проверить `trace_endpoint_to_db`, `find_blast_radius`, `check_layer_violations`, `find_spring_wiring` |
+| Фаза 3: Neo4j/jQAssistant/Joern backend | Отложено как расширение | `docs/phase1-phase2-deployment.md`, `docs/no-docker-architecture.md` | Для пилота используется файловый no-Docker backend; Neo4j/jQAssistant подключаются позже как другой backend того же tool contract |
 | Расширенная фаза 4: интервью, транскрибация, extraction | Отложено | `docs/phase1-phase2-deployment.md`, манифест | Нужен отдельный workflow после согласования процесса с продуктом и безопасниками |
 | Open-source лицензирование | Реализовано | `LICENSE`, `NOTICE`, `README.md` | Проверить Apache License 2.0 |
 
@@ -71,6 +76,7 @@
 - Поднимать Docker.
 - Поднимать Neo4j локально.
 - Встраивать Joern/jQAssistant в первый запуск.
+- Менять агентский workflow при замене файлового phase 3 backend на Neo4j.
 - Автоматически скачивать бинарники из GitHub, Homebrew, npm, PyPI или других
   публичных источников.
 - Делать отдельную копию workflow под каждую модель.

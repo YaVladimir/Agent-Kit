@@ -16,6 +16,8 @@ $required = @(
     "templates\adapters\deepseek-v4-flash.yaml",
     "templates\tool-manifest.json",
     "templates\qwen-settings.json",
+    "templates\context\architecture-graph.yaml",
+    "schemas\architecture-graph.schema.yaml",
     "docs\cli-integration-notes.md",
     "docs\gigacode-cli-integration.md",
     "docs\cli-user-guide.md",
@@ -25,10 +27,13 @@ $required = @(
     "docs\manifest-alignment.md",
     "docs\no-docker-architecture.md",
     "examples\todoserver-context\index.md",
+    "examples\todoserver-context\architecture-graph.yaml",
     "examples\todoserver-context\glossary.yaml",
     "examples\todoserver-context\processes\todo-crud.yaml",
     "examples\todoserver-context\rules\todo-rules.yaml",
     "mcp\summary-mcp\src\summary_mcp\server.py",
+    "mcp\architecture-mcp\pyproject.toml",
+    "mcp\architecture-mcp\src\architecture_mcp\server.py",
     "templates\qwen-settings.phase1-phase2.json",
     "scripts\setup-phase1-phase2-macos.sh",
     "scripts\setup-phase1-phase2-linux.sh",
@@ -110,7 +115,11 @@ $requiredToolNames = @(
     "summary.find_module",
     "code.search_symbols",
     "code.read_definition",
-    "code.find_references"
+    "code.find_references",
+    "architecture.trace_endpoint_to_db",
+    "architecture.find_blast_radius",
+    "architecture.check_layer_violations",
+    "architecture.find_spring_wiring"
 )
 foreach ($toolName in $requiredToolNames) {
     if ($toolNames -notcontains $toolName) {
@@ -189,6 +198,7 @@ try {
         ".gigacode-adapters\deepseek-v4-flash.yaml",
         ".context\index.md",
         ".context\architecture.md",
+        ".context\architecture-graph.yaml",
         ".context\glossary.yaml",
         ".context\processes\example-process.yaml",
         ".context\rules\example-rules.yaml"
@@ -220,7 +230,7 @@ try {
     }
 
     $deployedToolManifest = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $smokeRoot ".gigacode-tools.json")
-    if ($deployedToolManifest -notmatch "context.find_change_points" -or $deployedToolManifest -notmatch "domain.translate_task" -or $deployedToolManifest -notmatch "code.search_symbols") {
+    if ($deployedToolManifest -notmatch "context.find_change_points" -or $deployedToolManifest -notmatch "domain.translate_task" -or $deployedToolManifest -notmatch "architecture.trace_endpoint_to_db" -or $deployedToolManifest -notmatch "code.search_symbols") {
         throw "Smoke-test развёртывания нашёл некорректную .gigacode-tools.json"
     }
 

@@ -8,6 +8,8 @@
 - `skills/gigacode-java-enterprise`: общий сценарий работы агента.
 - `templates`: файлы, которые копируются в продуктовый репозиторий.
 - `mcp/gigacode-context`: локальный stdio MCP-сервер для `.context`.
+- `mcp/architecture-mcp`: локальный no-Docker MCP-сервер для архитектурного
+  графа из `.context/architecture-graph.yaml`.
 - `schemas`: схемы YAML-файлов доменного контекста.
 - `prompts`: базовые промпты для корпоративной обёртки GigaCode.
 - `examples`: готовые примеры контекста для пилотных репозиториев.

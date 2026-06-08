@@ -19,6 +19,8 @@ required=(
   "templates/tool-manifest.json"
   "templates/qwen-settings.json"
   "templates/qwen-settings.phase1-phase2.json"
+  "templates/context/architecture-graph.yaml"
+  "schemas/architecture-graph.schema.yaml"
   "docs/cli-integration-notes.md"
   "docs/gigacode-cli-integration.md"
   "docs/cli-user-guide.md"
@@ -28,10 +30,13 @@ required=(
   "docs/manifest-alignment.md"
   "docs/no-docker-architecture.md"
   "examples/todoserver-context/index.md"
+  "examples/todoserver-context/architecture-graph.yaml"
   "examples/todoserver-context/glossary.yaml"
   "examples/todoserver-context/processes/todo-crud.yaml"
   "examples/todoserver-context/rules/todo-rules.yaml"
   "mcp/summary-mcp/src/summary_mcp/server.py"
+  "mcp/architecture-mcp/pyproject.toml"
+  "mcp/architecture-mcp/src/architecture_mcp/server.py"
   "scripts/setup-phase1-phase2-macos.sh"
   "scripts/setup-phase1-phase2-linux.sh"
   "scripts/verify-phase1-phase2.sh"
@@ -144,6 +149,10 @@ required_tool_names=(
   "code.search_symbols"
   "code.read_definition"
   "code.find_references"
+  "architecture.trace_endpoint_to_db"
+  "architecture.find_blast_radius"
+  "architecture.check_layer_violations"
+  "architecture.find_spring_wiring"
 )
 for tool_name in "${required_tool_names[@]}"; do
   if ! grep -q "\"name\": \"$tool_name\"" "$root/templates/tool-manifest.json"; then
@@ -234,6 +243,7 @@ deployed_required=(
   ".gigacode-adapters/deepseek-v4-flash.yaml"
   ".context/index.md"
   ".context/architecture.md"
+  ".context/architecture-graph.yaml"
   ".context/glossary.yaml"
   ".context/processes/example-process.yaml"
   ".context/rules/example-rules.yaml"
@@ -275,7 +285,7 @@ if ! grep -q 'deepseek-v4-flash' "$smoke_root/.gigacode-adapters/deepseek-v4-fla
   exit 1
 fi
 
-if ! grep -q '"name": "context.find_change_points"' "$smoke_root/.gigacode-tools.json" || ! grep -q '"name": "domain.translate_task"' "$smoke_root/.gigacode-tools.json" || ! grep -q '"name": "code.search_symbols"' "$smoke_root/.gigacode-tools.json"; then
+if ! grep -q '"name": "context.find_change_points"' "$smoke_root/.gigacode-tools.json" || ! grep -q '"name": "domain.translate_task"' "$smoke_root/.gigacode-tools.json" || ! grep -q '"name": "architecture.trace_endpoint_to_db"' "$smoke_root/.gigacode-tools.json" || ! grep -q '"name": "code.search_symbols"' "$smoke_root/.gigacode-tools.json"; then
   echo "Deployed .gigacode-tools.json is incomplete." >&2
   exit 1
 fi

@@ -1,0 +1,59 @@
+version: 1
+description: Пример архитектурного графа TodoServer для dry-run тестов.
+layer_policy:
+  description: Controller вызывает service, service работает с repository/entity.
+  layers:
+    - name: api
+      may_depend_on: [application]
+    - name: application
+      may_depend_on: [domain, infrastructure]
+    - name: domain
+      may_depend_on: []
+    - name: infrastructure
+      may_depend_on: [domain]
+modules:
+  - name: todoserver
+    layer: application
+    path: src/main
+    owners: []
+    tests: []
+endpoints:
+  - path: /todos
+    method: POST
+    name: Создать Todo
+    controller: TodoController
+    service: TodoService
+    repository: TodoRepository
+    tables:
+      - todo
+    tests: []
+  - path: /todos
+    method: GET
+    name: Найти Todo
+    controller: TodoController
+    service: TodoService
+    repository: TodoRepository
+    tables:
+      - todo
+    tests: []
+dependencies:
+  - source: TodoController
+    target: TodoService
+    type: calls
+    allowed: true
+  - source: TodoService
+    target: TodoRepository
+    type: calls
+    allowed: true
+  - source: TodoService
+    target: TodoMapper
+    type: calls
+    allowed: true
+spring_beans:
+  - name: todoService
+    class: TodoService
+    layer: application
+    dependencies:
+      - TodoRepository
+      - TodoMapper
+    tests: []
