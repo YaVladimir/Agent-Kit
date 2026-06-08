@@ -15,6 +15,7 @@ instructions:
 tooling:
   mcp_config_format: qwen-compatible
   mcp_config_path: .qwen/settings.json
+  tool_manifest_path: .gigacode-tools.json
   supports_stdio_mcp: true
   supports_function_calling: false
   supports_native_lsp: false

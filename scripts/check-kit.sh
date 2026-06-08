@@ -13,6 +13,7 @@ required=(
   "templates/.gigacode.yaml"
   "templates/.gitignore.additions"
   "templates/adapter-compatibility.yaml"
+  "templates/tool-manifest.json"
   "templates/qwen-settings.json"
   "templates/qwen-settings.phase1-phase2.json"
   "docs/cli-integration-notes.md"
@@ -54,6 +55,7 @@ fi
 python3 -m json.tool "$root/templates/.lsp.json" >/dev/null
 python3 -m json.tool "$root/templates/qwen-settings.json" >/dev/null
 python3 -m json.tool "$root/templates/qwen-settings.phase1-phase2.json" >/dev/null
+python3 -m json.tool "$root/templates/tool-manifest.json" >/dev/null
 
 if ! grep -Eq '^---[[:space:]]*$' "$root/skills/gigacode-java-enterprise/SKILL.md"; then
   echo "Skill frontmatter is missing." >&2
@@ -75,6 +77,33 @@ if ! grep -Eq 'allow_external_downloads:[[:space:]]*false' "$root/templates/adap
   exit 1
 fi
 
+if ! grep -Eq 'tool_manifest_path:[[:space:]]*.gigacode-tools.json' "$root/templates/adapter-compatibility.yaml"; then
+  echo "adapter-compatibility.yaml does not point to tool manifest." >&2
+  exit 1
+fi
+
+required_tool_names=(
+  "context.repo_overview"
+  "context.lookup_domain"
+  "context.find_change_points"
+  "summary.get_summary"
+  "summary.find_module"
+  "code.search_symbols"
+  "code.read_definition"
+  "code.find_references"
+)
+for tool_name in "${required_tool_names[@]}"; do
+  if ! grep -q "\"name\": \"$tool_name\"" "$root/templates/tool-manifest.json"; then
+    echo "tool-manifest.json does not contain required tool: $tool_name" >&2
+    exit 1
+  fi
+done
+
+if ! grep -q '"allowExternalDownloads": false' "$root/templates/tool-manifest.json"; then
+  echo "tool-manifest.json must forbid external downloads." >&2
+  exit 1
+fi
+
 if ! grep -q 'Qwen' "$root/docs/model-adapter-contract.md" || ! grep -q 'DeepSeek' "$root/docs/model-adapter-contract.md"; then
   echo "Model adapter contract must describe Qwen and DeepSeek-like models." >&2
   exit 1
@@ -87,6 +116,11 @@ fi
 
 if ! grep -q '.gigacode-adapter.yaml' "$root/scripts/copy-templates.ps1" || ! grep -q '.gigacode-adapter.yaml' "$root/scripts/copy-templates.sh"; then
   echo "copy-templates scripts do not copy adapter profile." >&2
+  exit 1
+fi
+
+if ! grep -q '.gigacode-tools.json' "$root/scripts/copy-templates.ps1" || ! grep -q '.gigacode-tools.json' "$root/scripts/copy-templates.sh"; then
+  echo "copy-templates scripts do not copy tool manifest." >&2
   exit 1
 fi
 
@@ -131,6 +165,7 @@ deployed_required=(
   ".lsp.json"
   ".gigacode.yaml"
   ".gigacode-adapter.yaml"
+  ".gigacode-tools.json"
   ".context/index.md"
   ".context/architecture.md"
   ".context/glossary.yaml"
@@ -146,6 +181,7 @@ for relative in "${deployed_required[@]}"; do
 done
 
 python3 -m json.tool "$smoke_root/.lsp.json" >/dev/null
+python3 -m json.tool "$smoke_root/.gigacode-tools.json" >/dev/null
 
 if ! grep -Eq 'allow_network_tools:[[:space:]]*false' "$smoke_root/.gigacode.yaml"; then
   echo "Deployed .gigacode.yaml must forbid network tools." >&2
@@ -164,6 +200,11 @@ fi
 
 if ! grep -Eq 'allow_external_downloads:[[:space:]]*false' "$smoke_root/.gigacode-adapter.yaml"; then
   echo "Deployed .gigacode-adapter.yaml must forbid external downloads." >&2
+  exit 1
+fi
+
+if ! grep -q '"name": "context.find_change_points"' "$smoke_root/.gigacode-tools.json" || ! grep -q '"name": "code.search_symbols"' "$smoke_root/.gigacode-tools.json"; then
+  echo "Deployed .gigacode-tools.json is incomplete." >&2
   exit 1
 fi
 

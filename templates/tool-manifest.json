@@ -1,0 +1,232 @@
+{
+  "version": 1,
+  "language": "ru",
+  "policy": {
+    "readOnlyByDefault": true,
+    "allowExternalDownloads": false,
+    "requirePlanBeforeEdit": true
+  },
+  "tools": [
+    {
+      "name": "context.repo_overview",
+      "kind": "context",
+      "description": "Вернуть краткую сводку репозитория, модулей и архитектурных ограничений.",
+      "backend": {
+        "type": "mcp",
+        "server": "gigacode-context",
+        "tool": "repo_overview"
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "context.lookup_domain",
+      "kind": "domain",
+      "description": "Найти доменные термины, процессы, правила и маппинг на код для пользовательской задачи.",
+      "backend": {
+        "type": "mcp",
+        "server": "gigacode-context",
+        "tool": "lookup_domain"
+      },
+      "inputSchema": {
+        "type": "object",
+        "required": ["query"],
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Бизнес-задача или доменный термин на языке пользователя."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "context.get_module_summary",
+      "kind": "context",
+      "description": "Вернуть назначение модуля, ключевые пакеты и типовые точки изменения.",
+      "backend": {
+        "type": "mcp",
+        "server": "gigacode-context",
+        "tool": "get_module_summary"
+      },
+      "inputSchema": {
+        "type": "object",
+        "required": ["module"],
+        "properties": {
+          "module": {
+            "type": "string",
+            "description": "Имя модуля или пакета."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "context.find_change_points",
+      "kind": "context",
+      "description": "Найти вероятные файлы, классы и тесты для изменения по задаче.",
+      "backend": {
+        "type": "mcp",
+        "server": "gigacode-context",
+        "tool": "find_change_points"
+      },
+      "inputSchema": {
+        "type": "object",
+        "required": ["task"],
+        "properties": {
+          "task": {
+            "type": "string",
+            "description": "Краткое описание задачи простыми словами."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "summary.get_summary",
+      "kind": "summary",
+      "description": "Получить summary репозитория, модуля или пакета.",
+      "backend": {
+        "type": "mcp",
+        "server": "summaries",
+        "tool": "get_summary"
+      },
+      "inputSchema": {
+        "type": "object",
+        "required": ["scope"],
+        "properties": {
+          "scope": {
+            "type": "string",
+            "enum": ["repo", "module", "package"]
+          },
+          "name": {
+            "type": "string",
+            "description": "Имя модуля или пакета, если scope не repo."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "summary.find_module",
+      "kind": "summary",
+      "description": "Найти модуль по бизнес-описанию или техническому запросу.",
+      "backend": {
+        "type": "mcp",
+        "server": "summaries",
+        "tool": "find_module"
+      },
+      "inputSchema": {
+        "type": "object",
+        "required": ["query"],
+        "properties": {
+          "query": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "summary.list_packages",
+      "kind": "summary",
+      "description": "Перечислить известные пакеты и модули.",
+      "backend": {
+        "type": "mcp",
+        "server": "summaries",
+        "tool": "list_packages"
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "module": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "code.search_symbols",
+      "kind": "code",
+      "description": "Найти классы, методы, функции или типы по имени/описанию.",
+      "backend": {
+        "type": "adapter",
+        "preferred": ["basecode-mcp-server", "mcp-language-server", "native-lsp", "rg"]
+      },
+      "inputSchema": {
+        "type": "object",
+        "required": ["query"],
+        "properties": {
+          "query": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "code.read_definition",
+      "kind": "code",
+      "description": "Прочитать определение найденного символа.",
+      "backend": {
+        "type": "adapter",
+        "preferred": ["basecode-mcp-server", "mcp-language-server", "native-lsp", "read-file"]
+      },
+      "inputSchema": {
+        "type": "object",
+        "required": ["symbol"],
+        "properties": {
+          "symbol": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "code.find_references",
+      "kind": "code",
+      "description": "Найти использования символа.",
+      "backend": {
+        "type": "adapter",
+        "preferred": ["basecode-mcp-server", "mcp-language-server", "native-lsp", "rg"]
+      },
+      "inputSchema": {
+        "type": "object",
+        "required": ["symbol"],
+        "properties": {
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "code.find_tests",
+      "kind": "code",
+      "description": "Найти тесты, связанные с классом, методом, endpoint или модулем.",
+      "backend": {
+        "type": "adapter",
+        "preferred": ["basecode-mcp-server", "mcp-language-server", "rg"]
+      },
+      "inputSchema": {
+        "type": "object",
+        "required": ["target"],
+        "properties": {
+          "target": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  ]
+}

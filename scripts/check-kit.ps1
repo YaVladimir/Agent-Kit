@@ -11,6 +11,7 @@ $required = @(
     "templates\.gigacode.yaml",
     "templates\.gitignore.additions",
     "templates\adapter-compatibility.yaml",
+    "templates\tool-manifest.json",
     "templates\qwen-settings.json",
     "docs\cli-integration-notes.md",
     "docs\gigacode-cli-integration.md",
@@ -47,6 +48,7 @@ foreach ($relative in $required) {
 Get-Content -Raw -LiteralPath (Join-Path $root "templates\.lsp.json") | ConvertFrom-Json | Out-Null
 Get-Content -Raw -LiteralPath (Join-Path $root "templates\qwen-settings.json") | ConvertFrom-Json | Out-Null
 Get-Content -Raw -LiteralPath (Join-Path $root "templates\qwen-settings.phase1-phase2.json") | ConvertFrom-Json | Out-Null
+$toolManifestJson = Get-Content -Raw -LiteralPath (Join-Path $root "templates\tool-manifest.json") | ConvertFrom-Json
 
 $skill = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $root "skills\gigacode-java-enterprise\SKILL.md")
 if ($skill -notmatch '(?s)^---\s+name:\s+gigacode-java-enterprise\s+description:\s+.+?\s+---') {
@@ -61,6 +63,29 @@ if ($systemPrompt -notmatch "рус") {
 $adapterProfile = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $root "templates\adapter-compatibility.yaml")
 if ($adapterProfile -notmatch "model_family" -or $adapterProfile -notmatch "allow_external_downloads:\s*false") {
     throw "Некорректный шаблон adapter-compatibility.yaml"
+}
+if ($adapterProfile -notmatch "tool_manifest_path:\s*\.gigacode-tools\.json") {
+    throw "adapter-compatibility.yaml не указывает tool manifest"
+}
+
+$toolNames = @($toolManifestJson.tools | ForEach-Object { $_.name })
+$requiredToolNames = @(
+    "context.repo_overview",
+    "context.lookup_domain",
+    "context.find_change_points",
+    "summary.get_summary",
+    "summary.find_module",
+    "code.search_symbols",
+    "code.read_definition",
+    "code.find_references"
+)
+foreach ($toolName in $requiredToolNames) {
+    if ($toolNames -notcontains $toolName) {
+        throw "tool-manifest.json не содержит обязательный tool: $toolName"
+    }
+}
+if ($toolManifestJson.policy.allowExternalDownloads -ne $false) {
+    throw "tool-manifest.json должен запрещать внешние загрузки"
 }
 
 $adapterContract = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $root "docs\model-adapter-contract.md")
@@ -77,6 +102,9 @@ $copyPs1 = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $root "script
 $copySh = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $root "scripts\copy-templates.sh")
 if ($copyPs1 -notmatch "\.gigacode-adapter\.yaml" -or $copySh -notmatch "\.gigacode-adapter\.yaml") {
     throw "copy-templates скрипты не копируют профиль адаптера"
+}
+if ($copyPs1 -notmatch "\.gigacode-tools\.json" -or $copySh -notmatch "\.gigacode-tools\.json") {
+    throw "copy-templates скрипты не копируют tool manifest"
 }
 
 $setupScripts = @(
@@ -116,6 +144,7 @@ try {
         ".lsp.json",
         ".gigacode.yaml",
         ".gigacode-adapter.yaml",
+        ".gigacode-tools.json",
         ".context\index.md",
         ".context\architecture.md",
         ".context\glossary.yaml",
@@ -130,6 +159,7 @@ try {
     }
 
     Get-Content -Raw -LiteralPath (Join-Path $smokeRoot ".lsp.json") | ConvertFrom-Json | Out-Null
+    Get-Content -Raw -LiteralPath (Join-Path $smokeRoot ".gigacode-tools.json") | ConvertFrom-Json | Out-Null
 
     $deployedProjectConfig = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $smokeRoot ".gigacode.yaml")
     if ($deployedProjectConfig -notmatch "allow_network_tools:\s*false" -or $deployedProjectConfig -notmatch "require_plan_before_edit:\s*true") {
@@ -139,6 +169,11 @@ try {
     $deployedAdapterConfig = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $smokeRoot ".gigacode-adapter.yaml")
     if ($deployedAdapterConfig -notmatch "model_family" -or $deployedAdapterConfig -notmatch "allow_external_downloads:\s*false") {
         throw "Smoke-test развёртывания нашёл некорректную .gigacode-adapter.yaml"
+    }
+
+    $deployedToolManifest = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $smokeRoot ".gigacode-tools.json")
+    if ($deployedToolManifest -notmatch "context.find_change_points" -or $deployedToolManifest -notmatch "code.search_symbols") {
+        throw "Smoke-test развёртывания нашёл некорректную .gigacode-tools.json"
     }
 } finally {
     if (Test-Path -LiteralPath $smokeRoot) {

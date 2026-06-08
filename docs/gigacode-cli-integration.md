@@ -28,6 +28,7 @@ repo-root/
   .lsp.json
   .gigacode.yaml
   .gigacode-adapter.yaml
+  .gigacode-tools.json
   .context/
     index.md
     architecture.md
@@ -43,6 +44,8 @@ repo-root/
 `.gigacode.yaml` хранит настройки проекта, понятные wrapper'у.
 `.gigacode-adapter.yaml` фиксирует совместимость конкретного CLI/wrapper с
 контрактом kit.
+`.gigacode-tools.json` содержит машиночитаемый список logical tools, input
+schemas и backend mapping для MCP/function-calling/wrapper-loop.
 
 ## Слои промптов
 

@@ -29,7 +29,8 @@
 | Общение агента и текстовые инструкции на русском языке | Реализовано | `README.md`, `prompts/system.md`, `templates/AGENTS.md`, `skills/gigacode-java-enterprise/SKILL.md` | `scripts/check-kit.ps1` проверяет русскоязычное правило в системном промпте |
 | Модель-независимый workflow: задача -> контекст -> поиск -> план -> код -> проверки | Реализовано | `prompts/system.md`, `templates/AGENTS.md`, `skills/gigacode-java-enterprise/SKILL.md`, `docs/model-agnostic-agent-test.md` | Прогнать dry-run из `docs/model-agnostic-agent-test.md` |
 | Интеграция с Qwen Coder / GigaCode CLI | Реализовано как совместимый шаблон | `templates/qwen-settings.json`, `templates/qwen-settings.phase1-phase2.json`, `docs/gigacode-cli-integration.md` | Скопировать settings в `.qwen/settings.json` и запустить совместимый CLI из корня проекта |
-| Возможность встроить DeepSeek-like или другую LLM | Реализовано как контракт адаптера | `docs/model-adapter-contract.md`, `templates/adapter-compatibility.yaml`, `docs/cli-integration-notes.md` | Заполнить `.gigacode-adapter.yaml` для конкретного CLI/wrapper и пройти acceptance checklist |
+| Возможность встроить DeepSeek-like или другую LLM | Реализовано как контракт адаптера | `docs/model-adapter-contract.md`, `templates/adapter-compatibility.yaml`, `templates/tool-manifest.json`, `docs/cli-integration-notes.md` | Заполнить `.gigacode-adapter.yaml`, загрузить `.gigacode-tools.json` в wrapper и пройти acceptance checklist |
+| Машиночитаемый контракт tools для MCP/function-calling/wrapper-loop | Реализовано | `templates/tool-manifest.json`, `docs/model-adapter-contract.md`, `scripts/check-kit.*` | `check-kit.ps1`/`check-kit.sh` валидируют JSON и обязательные logical tools |
 | Фаза 1: навигация по коду через codebase/LSP/MCP | Реализовано как подключаемый слой | `templates/qwen-settings.phase1-phase2.json`, `docs/phase1-phase2-deployment.md`, `scripts/verify-phase1-phase2.*` | Установить approved tools из внутренних источников и запустить verify |
 | Java LSP через Eclipse JDT LS | Реализовано как обязательная проверка окружения | `templates/.lsp.json`, `docs/phase1-phase2-deployment.md`, `scripts/verify-phase1-phase2.*` | `jdtls` должен быть в `PATH` или указан абсолютным путем в конфиге |
 | TypeScript LSP | Реализовано как подключаемый слой | `templates/qwen-settings.phase1-phase2.json`, `docs/phase1-phase2-deployment.md` | Проверить `typescript-language-server --version` и verify |
@@ -50,12 +51,14 @@
 2. `scripts/copy-templates.ps1` или `scripts/copy-templates.sh` разворачивает
    шаблоны в пустой продуктовый репозиторий.
 3. В продуктовом репозитории есть `AGENTS.md`, `QWEN.md`, `.context`,
-   `.gigacode.yaml`, `.gigacode-adapter.yaml`.
+   `.gigacode.yaml`, `.gigacode-adapter.yaml`, `.gigacode-tools.json`.
 4. Для выбранного CLI заполнен профиль адаптера.
-5. Все runtime-инструменты установлены только из approved внутренних источников.
-6. `setup-phase1-phase2-*` показывает, каких команд не хватает, но ничего не
+5. Wrapper выбранной модели читает `.gigacode-tools.json` или внутренний
+   эквивалент.
+6. Все runtime-инструменты установлены только из approved внутренних источников.
+7. `setup-phase1-phase2-*` показывает, каких команд не хватает, но ничего не
    скачивает и не устанавливает.
-7. `verify-phase1-phase2-*` проходит в окружении разработчика или честно
+8. `verify-phase1-phase2-*` проходит в окружении разработчика или честно
    показывает недостающие approved tools.
 
 ## Что не нужно делать в пилоте

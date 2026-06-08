@@ -13,6 +13,7 @@ Copy-Item -LiteralPath (Join-Path $kitRoot "templates\QWEN.md") -Destination (Jo
 Copy-Item -LiteralPath (Join-Path $kitRoot "templates\.lsp.json") -Destination (Join-Path $target ".lsp.json") -Force
 Copy-Item -LiteralPath (Join-Path $kitRoot "templates\.gigacode.yaml") -Destination (Join-Path $target ".gigacode.yaml") -Force
 Copy-Item -LiteralPath (Join-Path $kitRoot "templates\adapter-compatibility.yaml") -Destination (Join-Path $target ".gigacode-adapter.yaml") -Force
+Copy-Item -LiteralPath (Join-Path $kitRoot "templates\tool-manifest.json") -Destination (Join-Path $target ".gigacode-tools.json") -Force
 
 $contextTarget = Join-Path $target ".context"
 New-Item -ItemType Directory -Force -Path $contextTarget | Out-Null
